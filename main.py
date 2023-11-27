@@ -13,7 +13,6 @@ def create_players() -> list[p.Player]:
     all_players.append(p.Player(c.PLAYER_NAMES[1], c.PLAYER_COLORS[1]))
     return all_players
 
-
 def create_pieces() -> list[pi.Piece]:
     created_pieces = []
     for name, colors_and_positions in c.ALL_PIECES.items():
@@ -51,9 +50,10 @@ if __name__ == "__main__":
 
     # assign pieces to players and fill board squares with pieces
     game.set_up_game()
-
     # creating draw class to display all game elements to pygame client
     draw = d.Draw_board()
+    draw.load_images(c.PIECE_IMAGES)
+    draw.load_selected_images(c.PIECE_IMAGES)
 
     # running the game
     run = True

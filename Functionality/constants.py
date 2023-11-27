@@ -1,14 +1,26 @@
 SCREEN_HEIGHT = 800
 SCREEN_WIDTH = 800
-#BACKGROUND_COLOR = (0, 153, 51)
-BACKGROUND_COLOR = (217, 179, 140)
+BACKGROUND_COLOR = (168, 168, 168)
 COLORS = {
-     'WHITE': (128, 128, 128)
+     'WHITE': (0, 0, 0)
     ,'BLACK': (0, 0, 0)
     ,'GREY' : (128, 128, 128)
     }
+PAWN_HEIGHT_SCALE = 0.0625
+PAWN_WIDTH_SCALE = 0.075
+ROOK_HEIGHT_SCALE = 0.08333333
+ROOK_WIDTH_SCALE = 0.0916666
+KNIGHT_HEIGHT_SCALE = 0.0916666
+KNIGHT_WIDTH_SCALE = 0.0916666
+BIG_PIECE_HEIGHT_SCALE = 0.1083333
+BIG_PIECE_WIDTH_SCALE = 0.1
 
-PLAYER_NAMES = ["Jur", "Tom"]
+PAWN_IMAGE_SIZE = (SCREEN_HEIGHT * PAWN_HEIGHT_SCALE, SCREEN_WIDTH * PAWN_WIDTH_SCALE)
+ROOK_IMAGE_SIZE = (SCREEN_HEIGHT * ROOK_HEIGHT_SCALE, SCREEN_WIDTH * ROOK_WIDTH_SCALE)
+KNIGHT_IMAGE_SIZE = (SCREEN_HEIGHT * KNIGHT_HEIGHT_SCALE, SCREEN_WIDTH * KNIGHT_WIDTH_SCALE)
+BIG_PIECE_IMAGE_SIZE = (SCREEN_HEIGHT * BIG_PIECE_HEIGHT_SCALE, SCREEN_WIDTH * BIG_PIECE_WIDTH_SCALE)
+
+PLAYER_NAMES = ["Player1", "Player2"]
 PLAYER_COLORS = ["WHITE", "BLACK"]
 WHITE = 0
 BLACK = 1
@@ -19,7 +31,7 @@ NUM_OF_COLS = 8
 SQUARE_HEIGHT = SCREEN_HEIGHT / NUM_OF_ROWS
 SQUARE_WIDTH = SCREEN_WIDTH / NUM_OF_COLS
 
-SQUARE_COLOR = (255, 255, 204)
+SQUARE_COLOR = (219, 219, 219)
 
 POSITION_IDX = 0
 COLOR_IDX = 1
@@ -112,22 +124,80 @@ KING_SHORT_CASTLE_SQUARES = {
     ,"58" :"78"
 }
 
-SQUARE_COORDINATES = {'18': (0.0, 700.0, 100.0, 100.0), '28': (100.0, 700.0, 100.0, 100.0), '38': (200.0, 700.0, 100.0, 100.0), '48': (300.0, 700.0, 100.0, 100.0), '58': (400.0, 700.0, 100.0, 100.0), '68': (500.0, 700.0, 100.0, 100.0), '78': (600.0, 700.0, 100.0, 100.0), '88': (700.0, 700.0, 100.0, 100.0), '17': (0.0, 600.0, 100.0, 100.0), '27': (100.0, 600.0, 100.0, 100.0), '37': (200.0, 600.0, 100.0, 100.0), '47': (300.0, 600.0, 100.0, 100.0), '57': (400.0, 600.0, 100.0, 100.0), '67': (500.0, 600.0, 100.0, 100.0), '77': (600.0, 600.0, 100.0, 100.0), '87': (700.0, 600.0, 100.0, 100.0), '16': (0.0, 500.0, 100.0, 100.0), '26': (100.0, 500.0, 100.0, 100.0), '36': (200.0, 500.0, 100.0, 100.0), '46': (300.0, 500.0, 100.0, 100.0), '56': (400.0, 500.0, 100.0, 100.0), '66': (500.0, 500.0, 100.0, 100.0), '76': (600.0, 500.0, 100.0, 100.0), '86': (700.0, 500.0, 100.0, 100.0), '15': (0.0, 400.0, 100.0, 100.0), '25': (100.0, 400.0, 100.0, 100.0), '35': (200.0, 400.0, 100.0, 100.0), '45': (300.0, 400.0, 100.0, 100.0), '55': (400.0, 400.0, 100.0, 100.0), '65': (500.0, 400.0, 100.0, 100.0), '75': (600.0, 400.0, 100.0, 100.0), '85': (700.0, 400.0, 100.0, 100.0), '14': (0.0, 300.0, 100.0, 100.0), '24': (100.0, 300.0, 100.0, 100.0), '34': (200.0, 300.0, 100.0, 100.0), '44': (300.0, 300.0, 100.0, 100.0), '54': (400.0, 300.0, 100.0, 100.0), '64': (500.0, 300.0, 100.0, 100.0), '74': (600.0, 300.0, 100.0, 100.0), '84': (700.0, 300.0, 100.0, 100.0), '13': (0.0, 200.0, 100.0, 100.0), '23': (100.0, 200.0, 100.0, 100.0), '33': (200.0, 200.0, 100.0, 100.0), '43': (300.0, 200.0, 100.0, 100.0), '53': (400.0, 200.0, 100.0, 100.0), '63': (500.0, 200.0, 100.0, 100.0), '73': (600.0, 200.0, 100.0, 100.0), '83': (700.0, 200.0, 100.0, 100.0), '12': (0.0, 100.0, 100.0, 100.0), '22': (100.0, 100.0, 100.0, 100.0), '32': (200.0, 100.0, 100.0, 100.0), '42': (300.0, 100.0, 100.0, 100.0), '52': (400.0, 100.0, 100.0, 100.0), '62': (500.0, 100.0, 100.0, 100.0), '72': (600.0, 100.0, 100.0, 100.0), '82': (700.0, 100.0, 100.0, 100.0), '11': (0.0, 0.0, 100.0, 100.0), '21': (100.0, 0.0, 100.0, 100.0), '31': (200.0, 0.0, 100.0, 100.0), '41': (300.0, 0.0, 100.0, 100.0), '51': (400.0, 0.0, 100.0, 100.0), '61': (500.0, 0.0, 100.0, 100.0), '71': (600.0, 0.0, 100.0, 100.0), '81': (700.0, 0.0, 100.0, 100.0)}
-
-UNICODE_PIECES = {
- 'black_pawn' : "\u265F"
-,'black_rook' : "\u265C"
-,'black_knight' : "\u265E"
-,'black_bishop' : "\u265D"
-,'black_king' : "\u265A"
-,'black_queen' : "\u265B"
-,'white_pawn' : "\u2659"
-,'white_rook' : "\u2656"
-,'white_knight' : "\u2658"
-,'white_bishop' : "\u2657"
-,'white_king' : "\u2654"
-,'white_queen' : "\u2655"
-}
+PIECE_IMAGES = [
+    {
+      "name": "black_pawn"
+     ,"normal_path" :"black_pawn.png"
+     ,"selected_path" :"selected_black_pawn.png" 
+     ,"scale" : PAWN_IMAGE_SIZE
+    },
+    {
+      "name": "black_rook"
+     ,"normal_path" :"black_rook.png" 
+     ,"selected_path" :"selected_black_rook.png" 
+     ,"scale" : ROOK_IMAGE_SIZE
+    },
+    {
+      "name": "black_knight"
+     ,"normal_path" :"black_knight.png" 
+     ,"selected_path" :"selected_black_knight.png" 
+     ,"scale" : KNIGHT_IMAGE_SIZE
+    },
+    {
+     "name": "black_bishop"
+     ,"normal_path" :"black_bishop.png" 
+     ,"selected_path" :"selected_black_bishop.png" 
+     ,"scale" : BIG_PIECE_IMAGE_SIZE
+    },
+    {
+     "name": "black_king"
+     ,"normal_path" :"black_king.png" 
+     ,"selected_path" :"selected_black_king.png" 
+     ,"scale" : BIG_PIECE_IMAGE_SIZE
+    },
+    {
+     "name": "black_queen"
+     ,"normal_path" :"black_queen.png" 
+     ,"selected_path" :"selected_black_queen.png" 
+     ,"scale" : BIG_PIECE_IMAGE_SIZE
+    },
+    {
+      "name": "white_pawn"
+     ,"normal_path" :"white_pawn.png" 
+     ,"selected_path" :"selected_white_pawn.png" 
+     ,"scale" : PAWN_IMAGE_SIZE
+    },
+    {
+      "name": "white_rook"
+     ,"normal_path" :"white_rook.png" 
+     ,"selected_path" :"selected_white_rook.png" 
+     ,"scale" : ROOK_IMAGE_SIZE
+    },
+    {
+      "name": "white_knight"
+     ,"normal_path" :"white_knight.png" 
+     ,"selected_path" :"selected_white_knight.png" 
+     ,"scale" : KNIGHT_IMAGE_SIZE
+    },
+    {
+     "name": "white_bishop"
+     ,"normal_path" :"white_bishop.png" 
+     ,"selected_path" :"selected_white_bishop.png" 
+     ,"scale" : BIG_PIECE_IMAGE_SIZE
+    },
+    {
+     "name": "white_king"
+     ,"normal_path" :"white_king.png" 
+     ,"selected_path" :"selected_white_king.png" 
+     ,"scale" : BIG_PIECE_IMAGE_SIZE
+    },
+    {
+     "name": "white_queen"
+     ,"normal_path" :"white_queen.png" 
+     ,"selected_path" :"selected_white_queen.png" 
+     ,"scale" : BIG_PIECE_IMAGE_SIZE
+    }
+]
 
 STRAIGHT = ["queen", "rook"]
 DIAGONAL = ["queen", "bishop"]

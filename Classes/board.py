@@ -70,11 +70,9 @@ class Board():
         if self.active_color_view == c.WHITE:
             self.active_color_view = c.BLACK
             self.active_square_coordinates = self.square_coordinates_black_bottom
-            print(f"active coordinates on white = {self.active_square_coordinates}")
         else:
             self.active_color_view = c.WHITE
             self.active_square_coordinates = self.square_coordinates_white_bottom
-            print(f"active coordinats black = {self.active_square_coordinates}")
         return
 
 

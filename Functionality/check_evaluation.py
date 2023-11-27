@@ -229,7 +229,7 @@ def evaluate_position(
                 king_position_column = int(king_position[c.COLUMN_IDX])
                 king_position_row = int(king_position[c.ROW_IDX])
         except UnboundLocalError as e:
-            print(f"you beat the developers, king removed from board shown by this error: {e}")
+            print(f"you beat the developer, king removed from board shown by this error: {e}")
     
     # From king position go to squares in all possible directions and check for occupation on squares
     # If occupied by opponent piece and it can strike king based on the striking move set of that piece:
@@ -265,7 +265,6 @@ def castle_evaluation(
     square_row = int(square[c.ROW_IDX])
     for square_dict in occupied_squares:
         if square == square_dict["position"]:
-            print("own piece or opponent piece on square, so king cannot move there")
             return False
     
     for eval_func_dir in EVAL_FUNCTIONS_AND_DIRECTIONS:
@@ -280,10 +279,8 @@ def castle_evaluation(
                                                     occupied_squares, 
                                                     piece_color
                                                 )
-        print(f"square_available when checking {eval_func_dir} of king position {square} = {square_available}")
         
         if square_available:
-            print(f"king not at check on this square {square}, castling  possible")
             return True
         else:
             # go to next direction 

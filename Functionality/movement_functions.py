@@ -211,7 +211,7 @@ def get_available_regular_pawn_move_positions(
         valid_directions: list[tuple],
         occupied_squares: list[dict[str, str, str]],
         piece_color: str
-        ):
+        ) -> list[tuple]:
     
     available_positions: list[tuple]
     available_positions = []

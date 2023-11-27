@@ -409,11 +409,11 @@ class Pawn(Piece):
         self.available_positions = []
         current_column = int(self.position[0])
         current_row = int(self.position[1])
+        first_move_position = None
         if self.turn_counter == 0:
             first_move_position = mf.get_available_regular_pawn_move_positions(
                             current_column, current_row, self.first_move_directions, occupied_squares, self.color)
             # only happens when pawn hasn't moved yet
-            self.available_positions.extend(first_move_position)
         regular_positions = mf.get_available_regular_pawn_move_positions(
             current_column, current_row, self.regular_directions, occupied_squares,self.color
         )
@@ -422,6 +422,9 @@ class Pawn(Piece):
         )
 
         self.available_positions.extend(regular_positions)
+        # check if first square in front of pawn is free, if not free no double square move possible
+        if len(self.available_positions) > 0 and first_move_position is not None:
+            self.available_positions.extend(first_move_position) 
         self.available_positions.extend(striking_positions)
         return
         
@@ -465,7 +468,6 @@ class Pawn(Piece):
         return
        
     def move_piece(self, position: str) -> None:
-        print(f"position at row index = {position[c.ROW_IDX]}")
         if self.color == "WHITE" and int(position[c.ROW_IDX]) == max(c.BOARD_ROWS):
             self.promote_pawn("queen")
         elif self.color == "BLACK" and int(position[c.ROW_IDX]) == min(c.BOARD_ROWS):

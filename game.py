@@ -138,9 +138,8 @@ class Game():
         if clicked_sq_tup in self.active_player.selected_piece.available_positions:
             try:
                 self.active_player.selected_piece.turn_counter += 1
-                print(f"turn_counter = {self.active_player.selected_piece.turn_counter}")
-            except:
-                print(f"no turn counter on this piece")
+            except AttributeError as e:
+                print(f"{e}, so not incrementing turn_counter for this piece")
             # checking for strike after each succesful move. No piece on square does nothing. 
             self.strike_piece(clicked_square)
             self.active_player.selected_piece.move_piece(clicked_square)
@@ -149,9 +148,6 @@ class Game():
             return True
         
         castled = self.castle(clicked_square)
-        print(f'long castle possible = {self.long_castle_possible} short castle possible = {self.short_castle_possible}')
-        print(f'clicked square = {clicked_square}')
-    
         self.active_player.deselect_piece()
         return castled
 
@@ -184,22 +180,16 @@ class Game():
         long_castle_possible = False
         for piece in self.active_player.active_pieces:
             if piece.type == "king":
-                print(f"Piece_pos = {piece.position} turn_count = {piece.turn_counter}")
                 if piece.turn_counter > 0:
                     return
             if piece.type == "rook":
-                print(f"Piece_pos = {piece.position} turn_count = {piece.turn_counter}")
                 if piece.position == self.short_rook_castle_square:
                     if piece.turn_counter == 0:
                         short_castle_possible = True
             if piece.type == "rook":
-                print(f"Piece_pos = {piece.position} turn_count = {piece.turn_counter}")
                 if piece.position == self.long_rook_castle_square:
                     if piece.turn_counter == 0:
                         long_castle_possible = True
-        
-        print(f"long = {long_castle_possible}")
-        print(f"short = {short_castle_possible}")
         if long_castle_possible:
             self.long_castle_eval(self.board.occupied_squares)
         else:
@@ -218,7 +208,6 @@ class Game():
             else:
                 continue
         self.long_castle_possible = long_castle_possible
-        print(f"short castle = {self.short_castle_possible}, long_castle = {self.long_castle_possible}")
         return
 
     def short_castle_eval(self, occupied_squares: dict[str:str, str:str, str:str]) -> None:
@@ -229,7 +218,6 @@ class Game():
             else:
                 continue
         self.short_castle_possible = short_castle_possible
-        print(f"short castle = {self.short_castle_possible}, long_castle = {self.long_castle_possible}")
         return
     
     def castle(self, clicked_square) -> bool:
