@@ -1,5 +1,4 @@
 import Functionality.constants as c
-import Assets as a
 import Classes.board as b
 import Classes.pieces as pi
 import Classes.players as p
@@ -13,6 +12,8 @@ class Game():
         self.num_of_click_in_turn = 0
         self.active_player = None
         self.piece_striked = False
+        self.piece_moved = False
+        self.castled = False
         self.check = False
         self.short_king_castle_square = None
         self.long_king_castle_square = None
@@ -121,6 +122,7 @@ class Game():
 
     def handle_player_second_action(self, click_x: float, click_y: float) -> bool:
         clicked_square = None
+        self.piece_moved = False
         for name, coordinates in self.board.active_square_coordinates.items():
             if click_x > coordinates[0] and click_x < coordinates[0] + c.SQUARE_WIDTH:
                 if click_y > coordinates[1] and click_y < coordinates[1] + c.SQUARE_HEIGHT:
@@ -131,9 +133,16 @@ class Game():
         try:
             clicked_sq_tup = (int(clicked_square[0]), int(clicked_square[1]))
         except TypeError as e: # Nonetype can happen when the edge of a square is clicked. 
-            self.active_player.deselect_piece()
             print(f"{e}")
+            self.piece_moved = None
             return
+
+        if clicked_square == self.active_player.selected_piece.position:
+            self.piece_moved = None
+            self.active_player.deselect_piece()
+            return
+        else: 
+            pass
 
         if clicked_sq_tup in self.active_player.selected_piece.available_positions:
             try:
@@ -145,11 +154,12 @@ class Game():
             self.active_player.selected_piece.move_piece(clicked_square)
             # reposition pieces on occupied squares after moving piece
             self.active_player.deselect_piece()
-            return True
-        
-        castled = self.castle(clicked_square)
+            self.piece_moved = True
+            return 
+        # if move is a valid castle move it happens in place
+        self.castle(clicked_square)
         self.active_player.deselect_piece()
-        return castled
+        return
 
     def pawn_promotion(self) -> None:
         for index, piece in enumerate(self.all_pieces):
@@ -227,13 +237,13 @@ class Game():
         als true dan koning verzetten en rook verzetten
         move piece king(long_castle_square) en move piece rook(castle_square)
         """
-        castled = False
+        self.castled = False
 
         if clicked_square == self.long_king_castle_square and self.long_castle_possible:
             for piece in self.active_player.active_pieces:
                 if piece.type == "king":
                     piece.move_piece(piece.long_castle_square)
-                    castled = True
+                    self.castled = True
                 if piece.type =="rook" and (piece.position == "11" or piece.position == "18"):
                     piece.move_piece(piece.castle_square)
 
@@ -241,11 +251,10 @@ class Game():
             for piece in self.active_player.active_pieces:
                 if piece.type == "king":
                     piece.move_piece(piece.short_castle_square)
-                    castled = True
+                    self.castled = True
                 if piece.type =="rook" and (piece.position == "81" or piece.position == "88"):
                     piece.move_piece(piece.castle_square)
-        
-        return castled
+        return 
 
     def set_active_player(self) -> None:
         for player in self.players:
@@ -272,11 +281,11 @@ class Game():
             self.stalemate = True
         return
 
-    def reset_turn(self, moved: bool) -> None:
+    def reset_turn(self) -> None:
         self.num_of_click_in_turn = 0
-        self.selected_piece = None
+        self.active_player.selected_piece = None
         self.piece_striked = False
-        if moved is True:
+        if self.piece_moved is True:
             self.pawn_promotion()
             # always reposition the pieces after a turn, because piece promotion might have happened
             self.board.position_pieces(self.all_pieces)

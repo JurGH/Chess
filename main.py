@@ -31,10 +31,12 @@ if __name__ == "__main__":
     # need to fix that this points to a relative position instead of absolute path
     move_piece_sound_path = os.path.join(sound_files_directory, "move_piece.mp3")
     strike_piece_sound_path = os.path.join(sound_files_directory, "strike_piece.wav")
+    castled_sound_path = os.path.join(sound_files_directory, "castling_3.wav")
     error_sound_path = os.path.join(sound_files_directory, "error.mp3")
     move_piece_sound = pygame.mixer.Sound(move_piece_sound_path)
     strike_piece_sound = pygame.mixer.Sound(strike_piece_sound_path)
     error_sound = pygame.mixer.Sound(error_sound_path)
+    castling_sound = pygame.mixer.Sound(castled_sound_path)
 
     WIN = pygame.display.set_mode((c.SCREEN_HEIGHT, c.SCREEN_WIDTH))
     pygame.display.set_caption("Chess")
@@ -77,33 +79,44 @@ if __name__ == "__main__":
                 if event.button == c.LEFT:
                     click_x, click_y = event.pos
                     if game.num_of_click_in_turn == 0:
-                        piece_selected = game.handle_player_first_action(click_x, click_y)
-                        if piece_selected is False:
-                            error_sound.play()
-                            pass
+                        game.handle_player_first_action(click_x, click_y)
 
                     elif game.num_of_click_in_turn == 1:
-                        moved = game.handle_player_second_action(click_x, click_y)
+                        game.handle_player_second_action(click_x, click_y)
+                        print(f"game.piece_moved = {game.piece_moved}")
+                        if game.castled is True:
+                            castling_sound.play(0)
+                            game.reset_turn()
+                            game.castled = False
+                            break
+
                         if game.piece_striked is True:
                             strike_piece_sound.play(0)
-                            game.reset_turn(moved)
-                            if game.checkmate is True:
-                                print(f"winning_player = {game.winning_player.name}")
-                                print(f"losing_player = {game.losing_player.name}")
-  
-                        elif moved is True:
-                            move_piece_sound.play(0)
-                            #calculating positions all pieces after moving a piece
-                            game.reset_turn(moved)
+                            game.reset_turn()
                             if game.checkmate is True:
                                 print(f"winning_player = {game.winning_player.name}")
                                 print(f"losing_player = {game.losing_player.name}")
 
-                        else:
-                            game.reset_turn(moved)
+                        elif game.piece_moved is True:
+                            move_piece_sound.play(0)
+                            #calculating positions all pieces after moving a piece
+                            game.reset_turn()
                             if game.checkmate is True:
                                 print(f"winning_player = {game.winning_player.name}")
                                 print(f"losing_player = {game.losing_player.name}")
+                        elif game.piece_moved is None:
+                            print("piece moved is none")
+                            game.reset_turn()
+                            if game.checkmate is True:
+                                print(f"winning_player = {game.winning_player.name}")
+                                print(f"losing_player = {game.losing_player.name}")
+                        else:
+                            error_sound.play(0)
+                            if game.checkmate is True:
+                                print(f"winning_player = {game.winning_player.name}")
+                                print(f"losing_player = {game.losing_player.name}")
+                            game.reset_turn()                           
+
 
 
                 
