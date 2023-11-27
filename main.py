@@ -32,10 +32,11 @@ if __name__ == "__main__":
     move_piece_sound_path = os.path.join(sound_files_directory, "move_piece.mp3")
     strike_piece_sound_path = os.path.join(sound_files_directory, "strike_piece.wav")
     castled_sound_path = os.path.join(sound_files_directory, "castling_3.wav")
-    error_sound_path = os.path.join(sound_files_directory, "error.mp3")
+    error_sound_path = os.path.join(sound_files_directory, "error_2.wav")
     move_piece_sound = pygame.mixer.Sound(move_piece_sound_path)
     strike_piece_sound = pygame.mixer.Sound(strike_piece_sound_path)
     error_sound = pygame.mixer.Sound(error_sound_path)
+    error_sound.set_volume(0.2)
     castling_sound = pygame.mixer.Sound(castled_sound_path)
 
     WIN = pygame.display.set_mode((c.SCREEN_HEIGHT, c.SCREEN_WIDTH))
@@ -83,7 +84,6 @@ if __name__ == "__main__":
 
                     elif game.num_of_click_in_turn == 1:
                         game.handle_player_second_action(click_x, click_y)
-                        print(f"game.piece_moved = {game.piece_moved}")
                         if game.castled is True:
                             castling_sound.play(0)
                             game.reset_turn()
@@ -105,7 +105,6 @@ if __name__ == "__main__":
                                 print(f"winning_player = {game.winning_player.name}")
                                 print(f"losing_player = {game.losing_player.name}")
                         elif game.piece_moved is None:
-                            print("piece moved is none")
                             game.reset_turn()
                             if game.checkmate is True:
                                 print(f"winning_player = {game.winning_player.name}")
