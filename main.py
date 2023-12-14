@@ -77,7 +77,7 @@ if __name__ == "__main__":
     while run:
 
         WIN.fill(c.BACKGROUND_COLOR)
-        draw.draw_board(game.board.active_square_coordinates, board.occupied_squares, game.all_pieces, game.selected_piece, WIN)
+        draw.draw_board(game.board.active_square_coordinates, board.occupied_squares, game.all_pieces, game.selected_piece, game.check, WIN)
         pygame.display.update()
 
 
@@ -117,4 +117,4 @@ if __name__ == "__main__":
                         print("It's a draw")
 
    
-            draw.draw_board(game.board.active_square_coordinates, board.occupied_squares, game.all_pieces, game.selected_piece, WIN)
+            draw.draw_board(game.board.active_square_coordinates, board.occupied_squares, game.all_pieces, game.selected_piece, game.check, WIN)

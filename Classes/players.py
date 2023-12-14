@@ -1,24 +1,40 @@
+import Functionality.constants as c
+
 # color should be used when creating pieces, so only one function has to be written. 
 class Player():
     def __init__(self, name, color, score=0):
         self.name: str
         self.color: str
         self.score: int
+        self.check_state: bool
         self.on_turn: bool
         self.active_pieces: list[object]
         self.selected_piece: object
         self.name = name
         self.color = color
         self.score = score
-        self.on_turn = None
         self.check_state = False
+        self.on_turn = False
         self.active_pieces = []
         self.selected_piece = None
-        
-        if self.color == "WHITE":
+
+        if color == c.PLAYER_COLORS[c.WHITE]:
             self.on_turn = True
+            self.long_king_castle_square = c.WHITE_LONG_CASTLE_KING_SQUARE
+            self.long_rook_castle_square = c.WHITE_LONG_CASTLE_ROOK_SQUARE
+            self.to_check_long_castle_squares = c.TO_CHECK_WHITE_LONG_CASTLE_SQUARES
+            self.short_king_castle_square = c.WHITE_SHORT_CASTLE_KING_SQUARE
+            self.short_rook_castle_square = c.WHITE_SHORT_CASTLE_ROOK_SQUARE
+            self.to_check_short_castle_squares = c.TO_CHECK_WHITE_SHORT_CASTLE_SQUARES
         else:
             self.on_turn = False
+            self.long_king_castle_square = c.BLACK_LONG_CASTLE_KING_SQUARE
+            self.long_rook_castle_square = c.BLACK_LONG_CASTLE_ROOK_SQUARE
+            self.to_check_long_castle_squares = c.TO_CHECK_BLACK_LONG_CASTLE_SQUARES
+            self.short_king_castle_square = c.BLACK_SHORT_CASTLE_KING_SQUARE
+            self.short_rook_castle_square = c.BLACK_SHORT_CASTLE_ROOK_SQUARE
+            self.to_check_short_castle_squares = c.TO_CHECK_BLACK_SHORT_CASTLE_SQUARES
+        return
 
     def set_active_pieces(self, pieces: list[object]) -> None:
         self.active_pieces = []
@@ -54,3 +70,11 @@ class Player():
     def add_score(self) -> None:
         self.score += 1
         return
+       
+    def test(self):
+        movement_types = ["LONG", "SHORT"]
+        check_types = ["KING_CASTLE_SQUARE", "ROOK_CASTLE_SQAURE", "TO_CHECK_CASTLE_SQUARES"]
+        for mt in movement_types:
+            for ct in check_types:
+                self.self_variable = "_".join(mt, ct)
+                constant_variable = "_".join(self.color, mt, ct)

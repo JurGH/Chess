@@ -218,19 +218,24 @@ def check_if_square_occupied(
 
 def evaluate_position(
         piece_color: str, 
-        eval_occupied_squares: dict[str:str, str:str, str:str]
-        ):
-    for idx, occupied_square in enumerate(eval_occupied_squares):
-        try:
-            # retrieve king position on eval_board
-            if occupied_square["type"] == "king" and occupied_square["color"] == piece_color:
-                king_square = eval_occupied_squares[idx]
-                king_position = king_square["position"]
-                king_position_column = int(king_position[c.COLUMN_IDX])
-                king_position_row = int(king_position[c.ROW_IDX])
-        except UnboundLocalError as e:
-            print(f"you beat the developer, king removed from board shown by this error: {e}")
-    
+        eval_occupied_squares: dict[str:str, str:str, str:str],
+        position_eval_type = c.CHECK_EVAL,
+        to_check_square = None):
+    if position_eval_type == c.CHECK_EVAL:
+        for idx, occupied_square in enumerate(eval_occupied_squares):
+            try:
+                # retrieve king position on eval_board
+                if occupied_square["type"] == "king" and occupied_square["color"] == piece_color:
+                    king_square = eval_occupied_squares[idx]
+                    king_position = king_square["position"]
+                    king_position_column = int(king_position[c.COLUMN_IDX])
+                    king_position_row = int(king_position[c.ROW_IDX])
+            except UnboundLocalError as e:
+                print(f"you beat the developer, king removed from board shown by this error: {e}")
+    else:
+        king_position = to_check_square
+        king_position_column = int(king_position[c.COLUMN_IDX])
+        king_position_row = int(king_position[c.ROW_IDX])
     # From king position go to squares in all possible directions and check for occupation on squares
     # If occupied by opponent piece and it can strike king based on the striking move set of that piece:
     # position is not valid
@@ -247,8 +252,8 @@ def evaluate_position(
                                                 piece_color
                                             )
         if square_available is False:
-            # king at check state on square, square not available
             return False
+        
         else:
             # go to next movement direction 
             continue
@@ -256,37 +261,6 @@ def evaluate_position(
     # moved to this square so square is available
     return True
 
-def castle_evaluation(
-        square: str, 
-        occupied_squares: list[dict[str:str, str:str, str:str]], 
-        piece_color: str
-        ):
-    square_col = int(square[c.COLUMN_IDX])
-    square_row = int(square[c.ROW_IDX])
-    for square_dict in occupied_squares:
-        if square == square_dict["position"]:
-            return False
-    
-    for eval_func_dir in EVAL_FUNCTIONS_AND_DIRECTIONS:
-        movement_direction = eval_func_dir["movement"]
-        direction_type = eval_func_dir["direction_type"]
-        movement_function = eval_func_dir["function"]
-        square_available = movement_function(
-                                                    square_col,
-                                                    square_row,
-                                                    movement_direction,
-                                                    direction_type, 
-                                                    occupied_squares, 
-                                                    piece_color
-                                                )
-        
-        if square_available:
-            return True
-        else:
-            # go to next direction 
-            continue
-    # king not at check on square, so castling might be possible (if other square(s) also don't check the king)
-    return False 
 
 STRAIGHT_DIRECTIONS = mf.get_valid_straight_directions()
 DIAGONAL_DIRECTIONS = mf.get_valid_diagonal_directions()
@@ -319,5 +293,3 @@ EVAL_FUNCTIONS_AND_DIRECTIONS = [
     ,"direction_type" : ["king"]
     ,"function" : evaluate_single_movement
     }]
-
-

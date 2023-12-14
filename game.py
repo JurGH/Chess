@@ -14,7 +14,7 @@ class Game():
         self.castling = castling
         self.active_player = None
         self.selected_piece = None
-        self.check = False
+        self.check = True
         self.stalemate = False
         self.checkmate = False
         self.state_turn = c.PIECE_NOT_SELECTED
@@ -259,4 +259,6 @@ class Game():
         self.eval_check()
         self.eval_checkmate_or_stalemate()
         self.state_turn = c.PIECE_NOT_SELECTED
+        if self.check: 
+            print(f"player {self.active_player.name} is checked now")
         return

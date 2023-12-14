@@ -341,4 +341,3 @@ def check_if_square_occupied(
         result_of_function.append(square_occupied)
 
     return result_of_function
-
