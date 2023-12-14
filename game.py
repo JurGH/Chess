@@ -2,37 +2,26 @@ import Functionality.constants as c
 import Classes.board as b
 import Classes.pieces as pi
 import Classes.players as p
+import Classes.castle as ca
 import Functionality.check_evaluation as ce
+from typing import Optional
 
 class Game():
-    def __init__(self, board: b.Board, players: list[p.Player], all_pieces: list[pi.Piece]):
+    def __init__(self, board: b.Board, players: list[p.Player], all_pieces: list[pi.Piece], castling: ca.Castling):
         self.board = board
         self.players = players
         self.all_pieces = all_pieces
-        self.num_of_click_in_turn = 0
+        self.castling = castling
         self.active_player = None
-        self.piece_striked = False
-        self.piece_moved = False
-        self.castled = False
-        self.check = False
-        self.short_king_castle_square = None
-        self.long_king_castle_square = None
-        self.short_rook_castle_square = None
-        self.long_rook_castle_square = None
-        self.to_check_long_castle_squares = None
-        self.to_check_short_castle_squares = None
-        self.long_castle_possible = None
-        self.short_castle_possible = None
-        self.winning_player = None
-        self.losing_player = None
+        self.selected_piece = None
         self.check = False
         self.stalemate = False
         self.checkmate = False
+        self.state_turn = c.PIECE_NOT_SELECTED
     
     def set_up_game(self) -> None:
         self.set_active_player()
         self.assign_pieces_to_players()
-        self.set_long_and_short_castle_squares()
         self.board.position_pieces(self.all_pieces)
         self.store_available_positions_player_pieces()
         self.edit_available_positions_player_pieces()
@@ -53,29 +42,14 @@ class Game():
             else:
                 player.set_active_pieces(black_pieces)
         return
-    
-    def set_long_and_short_castle_squares(self) -> None:
-        if self.active_player.color == c.PLAYER_COLORS[c.WHITE]:
-            self.long_king_castle_square = c.WHITE_LONG_CASTLE_KING_SQUARE
-            self.long_rook_castle_square = c.WHITE_LONG_CASTLE_ROOK_SQUARE
-            self.to_check_long_castle_squares = c.TO_CHECK_WHITE_LONG_CASTLE_SQUARES
-            self.short_king_castle_square = c.WHITE_SHORT_CASTLE_KING_SQUARE
-            self.short_rook_castle_square = c.WHITE_SHORT_CASTLE_ROOK_SQUARE
-            self.to_check_short_castle_squares = c.TO_CHECK_WHITE_SHORT_CASTLE_SQUARES
-        else:
-            self.long_king_castle_square = c.BLACK_LONG_CASTLE_KING_SQUARE
-            self.long_rook_castle_square = c.BLACK_LONG_CASTLE_ROOK_SQUARE
-            self.to_check_long_castle_squares = c.TO_CHECK_BLACK_LONG_CASTLE_SQUARES
-            self.short_king_castle_square = c.BLACK_SHORT_CASTLE_KING_SQUARE
-            self.short_rook_castle_square = c.BLACK_SHORT_CASTLE_ROOK_SQUARE
-            self.to_check_short_castle_squares = c.TO_CHECK_BLACK_SHORT_CASTLE_SQUARES
-        return
-                
+                  
     def store_available_positions_player_pieces(self) -> None:
         for piece in self.active_player.active_pieces:
             piece.get_available_positions(self.board.occupied_squares)
         return
-
+    """
+    comments needed
+    """
     def edit_available_positions_player_pieces(self) -> None:
         for piece in self.active_player.active_pieces:
             to_remove_positions = []
@@ -97,68 +71,96 @@ class Game():
             piece.toggle_selectable()
         return
     
-    def handle_player_first_action(self, click_x: float, click_y: float) -> None:
-        clicked_square = None
+    def get_clicked_square(self, click_x: float, click_y: float) -> Optional[str]:
         for name, coordinates in self.board.active_square_coordinates.items():
             if click_x > coordinates[0] and click_x < coordinates[0] + c.SQUARE_WIDTH:
                 if click_y > coordinates[1] and click_y < coordinates[1] + c.SQUARE_HEIGHT:
-                    clicked_square = name
-        # click invalid, not within coordinates of any square.
-        if clicked_square is None:
+                    return name
+        return
+    
+    def handle_player_action(self, clicked_square: str) -> bool:
+        if self.state_turn != c.PIECE_SELECTED:
+            self.handle_player_first_action(clicked_square)
+
+        elif self.state_turn == c.PIECE_SELECTED:
+            self.handle_player_second_action(clicked_square)
+        
+        else:
+            print(f"{self.state_turn} self.state_turn not valid")
             return
+
+
+    def handle_player_first_action(self, clicked_square: str) -> bool:
+        # click invalid, not within coordinates of any square.
         for piece in self.active_player.active_pieces:
             if piece.position == clicked_square and piece.selectable is True:
+                # evaluate if castling is possible when king is selected. 
+                if piece.type == "king":
+                    self.castling.castling_eval(self.active_player, self.board)
                 self.active_player.select_piece(piece)
-                self.num_of_click_in_turn = 1
                 # selected a piece so returning True to play sound
-                return True
+                self.state_turn = c.PIECE_SELECTED
+                self.selected_piece = piece
+                return
             else:
                 continue
 
         # didn't click on a square where own piece is currently, so resetting click counter.
         # if piece.selected is False:
         #no piece selected so returning False to play sound
-        return False
+        self.state_turn = c.PIECE_NOT_SELECTED
+        return
+    
+    def get_king_castle_move_type(self, clicked_square: str) -> Optional[int]:
+        print(f"self.active_player.long_king_castle_square = {self.active_player.short_king_castle_square}")
+        print(f"self.castling.short_castle_possible = {self.castling.short_castle_possible}")
+        if clicked_square == self.active_player.long_king_castle_square and self.castling.long_castle_possible:
+            return c.LONG
+        elif clicked_square == self.active_player.short_king_castle_square and self.castling.short_castle_possible:
+            return c.SHORT
+        else: 
+            return
 
-    def handle_player_second_action(self, click_x: float, click_y: float) -> bool:
-        clicked_square = None
-        self.piece_moved = False
-        for name, coordinates in self.board.active_square_coordinates.items():
-            if click_x > coordinates[0] and click_x < coordinates[0] + c.SQUARE_WIDTH:
-                if click_y > coordinates[1] and click_y < coordinates[1] + c.SQUARE_HEIGHT:
-                    clicked_square = name
-
+    def handle_player_second_action(self, clicked_square: str) -> bool:
+        print(self.active_player.selected_piece.type)
+        if self.active_player.selected_piece.type == "king":
+            castle_move = self.get_king_castle_move_type(clicked_square)
+            print(f"castle move = {castle_move}")
+            if castle_move is not None:
+                self.castle(castle_move)
+                self.state_turn = c.CASTLED
+                return
         # conversion to tuple so it can be evaluated against available positions within piece
         # which are stored as tuples. 
         try:
             clicked_sq_tup = (int(clicked_square[0]), int(clicked_square[1]))
         except TypeError as e: # Nonetype can happen when the edge of a square is clicked. 
             print(f"{e}")
-            self.piece_moved = None
+            self.state_turn = c.INVALID_MOVE
             return
-
+        
         if clicked_square == self.active_player.selected_piece.position:
-            self.piece_moved = None
-            self.active_player.deselect_piece()
+            self.state_turn = c.PIECE_NOT_MOVED
             return
-        else: 
-            pass
-
+        
         if clicked_sq_tup in self.active_player.selected_piece.available_positions:
             try:
                 self.active_player.selected_piece.turn_counter += 1
             except AttributeError as e:
                 print(f"{e}, so not incrementing turn_counter for this piece")
             # checking for strike after each succesful move. No piece on square does nothing. 
-            self.strike_piece(clicked_square)
+            
+            piece_striked = self.strike_piece(clicked_square)
             self.active_player.selected_piece.move_piece(clicked_square)
-            # reposition pieces on occupied squares after moving piece
-            self.active_player.deselect_piece()
-            self.piece_moved = True
-            return 
-        # if move is a valid castle move it happens in place
-        self.castle(clicked_square)
-        self.active_player.deselect_piece()
+            if piece_striked:
+                self.state_turn = c.STRIKED
+                return
+            else:
+                # reposition pieces on occupied squares after moving piece
+                self.state_turn = c.PIECE_MOVED
+                return
+        print('should not happen')
+        self.state_turn = c.INVALID_MOVE
         return
 
     def pawn_promotion(self) -> None:
@@ -174,86 +176,33 @@ class Game():
                     return
         return
 
-    def strike_piece(self, position) -> None:
+    def strike_piece(self, position) -> bool:
         for idx, piece in enumerate(self.all_pieces):
             if position == piece.position:
-                self.piece_striked = True
                 print(f"removing {self.all_pieces[idx]} from game")
                 del self.all_pieces[idx]
-                break
+                return True
             else:
                 continue
-        return
+        return False
 
-    def castling_eval(self) -> None:
-        short_castle_possible = False
-        long_castle_possible = False
-        for piece in self.active_player.active_pieces:
-            if piece.type == "king":
-                if piece.turn_counter > 0:
-                    return
-            if piece.type == "rook":
-                if piece.position == self.short_rook_castle_square:
-                    if piece.turn_counter == 0:
-                        short_castle_possible = True
-            if piece.type == "rook":
-                if piece.position == self.long_rook_castle_square:
-                    if piece.turn_counter == 0:
-                        long_castle_possible = True
-        if long_castle_possible:
-            self.long_castle_eval(self.board.occupied_squares)
-        else:
-            self.long_castle_possible = False
-        if short_castle_possible: 
-            self.short_castle_eval(self.board.occupied_squares)
-        else:
-            self.short_castle_possible = False
-        return
-    
-    def long_castle_eval(self, occupied_squares: dict[str:str, str:str, str:str]) -> None:
-        for square in self.to_check_long_castle_squares:
-            long_castle_possible = ce.castle_evaluation(square, occupied_squares, self.active_player.color)
-            if long_castle_possible is False:
-                break
-            else:
-                continue
-        self.long_castle_possible = long_castle_possible
-        return
-
-    def short_castle_eval(self, occupied_squares: dict[str:str, str:str, str:str]) -> None:
-        for square in self.to_check_short_castle_squares:
-            short_castle_possible = ce.castle_evaluation(square, occupied_squares, self.active_player.color)
-            if short_castle_possible is False:
-                break
-            else:
-                continue
-        self.short_castle_possible = short_castle_possible
-        return
-    
-    def castle(self, clicked_square) -> bool:
-        """
-        check of de click_square de long of short castle square is
-        als Long, check of long_castle_possible True is idem short
-        als true dan koning verzetten en rook verzetten
-        move piece king(long_castle_square) en move piece rook(castle_square)
-        """
-        self.castled = False
-
-        if clicked_square == self.long_king_castle_square and self.long_castle_possible:
+    def castle(self, castle_type: str) -> bool:
+        if castle_type == c.LONG:
             for piece in self.active_player.active_pieces:
                 if piece.type == "king":
-                    piece.move_piece(piece.long_castle_square)
+                    piece.move_piece(piece.long_castle_dest_square)
                     self.castled = True
-                if piece.type =="rook" and (piece.position == "11" or piece.position == "18"):
-                    piece.move_piece(piece.castle_square)
-
-        if clicked_square == self.short_king_castle_square and self.short_castle_possible:
+                if piece.type =="rook" and piece.castle_type == "long":
+                    piece.move_piece(piece.castle_dest_square)
+        elif castle_type == c.SHORT:
             for piece in self.active_player.active_pieces:
                 if piece.type == "king":
-                    piece.move_piece(piece.short_castle_square)
+                    piece.move_piece(piece.short_castle_dest_square)
                     self.castled = True
-                if piece.type =="rook" and (piece.position == "81" or piece.position == "88"):
-                    piece.move_piece(piece.castle_square)
+                if piece.type =="rook" and piece.castle_type == "short":
+                    piece.move_piece(piece.castle_dest_square)
+        else:
+            pass
         return 
 
     def set_active_player(self) -> None:
@@ -264,51 +213,50 @@ class Game():
                 continue
         return
     
-    def eval_check_or_stalemate(self) -> None:
-        self.checkmate = None
+    def eval_check(self) -> None:
+        eval_check = ce.evaluate_position(self.active_player.color, self.board.occupied_squares)
+        if eval_check is True:
+            self.check = False
+        else:
+            self.check = True
+        return
+
+    def eval_checkmate_or_stalemate(self) -> None:
+        self.checkmate = False
+        self.stalemate = False
         for piece in self.active_player.active_pieces:
             if len(piece.available_positions) > 0:
                 self.checkmate = False
+                self.stalemate = False
                 return
         if self.check is True:
             self.checkmate = True
-            for player in self.players:
-                if player.on_turn is True:
-                    self.losing_player = player
-                else:
-                    self.winning_player = player
         else:
             self.stalemate = True
         return
 
     def reset_turn(self) -> None:
-        self.num_of_click_in_turn = 0
-        self.active_player.selected_piece = None
-        self.piece_striked = False
-        if self.piece_moved is True:
-            self.pawn_promotion()
-            # always reposition the pieces after a turn, because piece promotion might have happened
-            self.board.position_pieces(self.all_pieces)
-            for player in self.players:
-                player.change_turn()
-            self.set_active_player()
-            # make sure new piece after pawn promotion is assigned to the correct player
-            self.assign_pieces_to_players()
-            self.set_long_and_short_castle_squares()
-            self.castling_eval()
-            self.store_available_positions_player_pieces()
-            self.edit_available_positions_player_pieces()
-            # no available positions in piece = not selectable
-            self.define_selectable_player_pieces() # no available positions in piece = not selectable
-            self.eval_check_or_stalemate()
+        if self.state_turn == c.PIECE_SELECTED or self.state_turn == c.PIECE_NOT_SELECTED:
             return
-        else:
-            return
-
-
-
-
-
-
-
-
+        if self.active_player.selected_piece is not None:
+            self.active_player.deselect_piece()
+            self.selected_piece = None
+        if self.state_turn == c.INVALID_MOVE or self.state_turn == c.PIECE_NOT_MOVED:
+            self.state_turn = c.PIECE_NOT_SELECTED
+            return    
+        self.pawn_promotion()
+        # always reposition the pieces after a turn, because piece promotion might have happened
+        self.board.position_pieces(self.all_pieces)
+        for player in self.players:
+            player.change_turn()
+        self.set_active_player()
+        # make sure new piece after pawn promotion is assigned to the correct player
+        self.assign_pieces_to_players()
+        self.store_available_positions_player_pieces()
+        self.edit_available_positions_player_pieces()
+        # no available positions in piece = not selectable
+        self.define_selectable_player_pieces() # no available positions in piece = not selectable
+        self.eval_check()
+        self.eval_checkmate_or_stalemate()
+        self.state_turn = c.PIECE_NOT_SELECTED
+        return

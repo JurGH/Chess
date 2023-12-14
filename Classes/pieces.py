@@ -54,12 +54,19 @@ class Rook(Piece):
         self.eval_position = None #eval_position is None, except if the piece is being evaluated
         self.color = color
         self.type = "rook"
+        try:
+            if int(self.position[c.COLUMN_IDX]) == 1:
+                self.castle_type = "long"
+            else:
+                self.castle_type = "short"
+        except ValueError as e:
+            print("unable to convert position[column] to int. messed up instantiation of rook class")
         self.turn_counter = 0
         self.available_positions = []
         self.selectable = False
         self.selected = False
         self.valid_directions = mf.get_valid_straight_directions()
-        self.castle_square = c.ROOK_CASTLE_SQUARES[self.position]
+        self.castle_dest_square = c.ROOK_CASTLE_SQUARES[self.position]
 
     def get_available_positions(self, occupied_squares: dict[str:str, str:str, str:str]) -> None:
         self.available_positions = []
@@ -319,16 +326,14 @@ class King(Piece):
         self.color = color
         self.check = False
         self.type = "king"
-        self.short_castle = False
-        self.long_castle = False
         self.turn_counter = 0
         self.available_castle_positions = []
         self.available_positions = []
         self.selectable = False
         self.selected = False
         self.valid_directions = mf.get_valid_king_directions()
-        self.long_castle_square = c.KING_LONG_CASTLE_SQUARES[self.position]
-        self.short_castle_square = c.KING_SHORT_CASTLE_SQUARES[self.position]
+        self.long_castle_dest_square = c.KING_LONG_CASTLE_SQUARES[self.position]
+        self.short_castle_dest_square = c.KING_SHORT_CASTLE_SQUARES[self.position]
         self.to_check_long_castle_squares = c.TO_CHECK_LONG_CASTLE_POSITIONS[self.position]
         self.to_check_short_castle_squares = c.TO_CHECK_SHORT_CASTLE_POSITIONS[self.position]
 
@@ -488,4 +493,3 @@ PIECE_CREATION_DICT = {
     ,"king": King
     ,"pawn": Pawn
 }
-

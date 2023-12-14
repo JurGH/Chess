@@ -4,6 +4,7 @@ import Classes.board as b
 import Functionality.constants as c
 import Classes.players as p
 import Classes.pieces as pi
+import Classes.castle as ca
 import draw as d
 import os
 
@@ -22,22 +23,30 @@ def create_pieces() -> list[pi.Piece]:
     return created_pieces
 
 current_directory = os.path.dirname(__file__)
-sound_files_directory = os.path.join(current_directory, "Assets")
+asset_files_directory = os.path.join(current_directory, "Assets")
 
 if __name__ == "__main__":
     pygame.init()
     pygame.mixer.init()
 
     # need to fix that this points to a relative position instead of absolute path
-    move_piece_sound_path = os.path.join(sound_files_directory, "move_piece.mp3")
-    strike_piece_sound_path = os.path.join(sound_files_directory, "strike_piece.wav")
-    castled_sound_path = os.path.join(sound_files_directory, "castling_3.wav")
-    error_sound_path = os.path.join(sound_files_directory, "error_2.wav")
+    move_piece_sound_path = os.path.join(asset_files_directory, "move_piece.mp3")
+    strike_piece_sound_path = os.path.join(asset_files_directory, "strike_piece.wav")
+    castled_sound_path = os.path.join(asset_files_directory, "castling_3.wav")
+    error_sound_path = os.path.join(asset_files_directory, "error_2.wav")
+
     move_piece_sound = pygame.mixer.Sound(move_piece_sound_path)
     strike_piece_sound = pygame.mixer.Sound(strike_piece_sound_path)
     error_sound = pygame.mixer.Sound(error_sound_path)
     error_sound.set_volume(0.2)
     castling_sound = pygame.mixer.Sound(castled_sound_path)
+
+
+    sound_library = {
+         c.PIECE_MOVED: move_piece_sound
+        ,c.STRIKED: strike_piece_sound
+        ,c.CASTLED: castling_sound
+        ,c.INVALID_MOVE: error_sound}
 
     WIN = pygame.display.set_mode((c.SCREEN_HEIGHT, c.SCREEN_WIDTH))
     pygame.display.set_caption("Chess")
@@ -47,9 +56,11 @@ if __name__ == "__main__":
     board = b.Board()
     all_players = create_players()
     all_pieces = create_pieces()
+    castling = ca.Castling()
+
 
     # setting up game class with game elements stored
-    game = g.Game(board, all_players, all_pieces)
+    game = g.Game(board, all_players, all_pieces, castling)
 
     # assign pieces to players and fill board squares with pieces
     game.set_up_game()
@@ -58,13 +69,17 @@ if __name__ == "__main__":
     draw.load_images(c.PIECE_IMAGES)
     draw.load_selected_images(c.PIECE_IMAGES)
 
+
+
+    num_of_click_in_turn = 0
     # running the game
     run = True
     while run:
 
         WIN.fill(c.BACKGROUND_COLOR)
-        draw.draw_board(game.board.active_square_coordinates, game.all_pieces, WIN)
+        draw.draw_board(game.board.active_square_coordinates, board.occupied_squares, game.all_pieces, game.selected_piece, WIN)
         pygame.display.update()
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -79,44 +94,27 @@ if __name__ == "__main__":
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == c.LEFT:
                     click_x, click_y = event.pos
-                    if game.num_of_click_in_turn == 0:
-                        game.handle_player_first_action(click_x, click_y)
+                    clicked_square = game.get_clicked_square(click_x, click_y)
+                    if clicked_square is None:
+                        print("this should never happen, clicked square is none")
 
-                    elif game.num_of_click_in_turn == 1:
-                        game.handle_player_second_action(click_x, click_y)
-                        if game.castled is True:
-                            castling_sound.play(0)
-                            game.reset_turn()
-                            game.castled = False
-                            break
+                    game.handle_player_action(clicked_square)
+                    if game.state_turn != c.PIECE_SELECTED and game.state_turn != c.PIECE_NOT_SELECTED and game.state_turn != c.PIECE_NOT_MOVED:
+                        sound_library[game.state_turn].play(0)
 
-                        if game.piece_striked is True:
-                            strike_piece_sound.play(0)
-                            game.reset_turn()
-                            if game.checkmate is True:
-                                print(f"winning_player = {game.winning_player.name}")
-                                print(f"losing_player = {game.losing_player.name}")
+                    else:
+                        pass
+                    
+                    game.reset_turn()
+                    
+                    if game.checkmate is True:
+                        for player in all_players:
+                            if player.on_turn is False:
+                                print(f"Gratz {player.name} you won!!")
+                            if player.on_turn is True:
+                                print(f"You lost {player.name}")
+                    if game.stalemate is True:
+                        print("It's a draw")
 
-                        elif game.piece_moved is True:
-                            move_piece_sound.play(0)
-                            #calculating positions all pieces after moving a piece
-                            game.reset_turn()
-                            if game.checkmate is True:
-                                print(f"winning_player = {game.winning_player.name}")
-                                print(f"losing_player = {game.losing_player.name}")
-                        elif game.piece_moved is None:
-                            game.reset_turn()
-                            if game.checkmate is True:
-                                print(f"winning_player = {game.winning_player.name}")
-                                print(f"losing_player = {game.losing_player.name}")
-                        else:
-                            error_sound.play(0)
-                            if game.checkmate is True:
-                                print(f"winning_player = {game.winning_player.name}")
-                                print(f"losing_player = {game.losing_player.name}")
-                            game.reset_turn()                           
-
-
-
-                
-            draw.draw_board(game.board.active_square_coordinates, game.all_pieces, WIN)
+   
+            draw.draw_board(game.board.active_square_coordinates, board.occupied_squares, game.all_pieces, game.selected_piece, WIN)

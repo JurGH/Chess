@@ -4,18 +4,18 @@ class Player():
         self.name: str
         self.color: str
         self.score: int
-        self.check_state: bool
         self.on_turn: bool
         self.active_pieces: list[object]
         self.selected_piece: object
         self.name = name
         self.color = color
         self.score = score
+        self.on_turn = None
         self.check_state = False
-        self.on_turn = False
         self.active_pieces = []
         self.selected_piece = None
-        if color == "WHITE":
+        
+        if self.color == "WHITE":
             self.on_turn = True
         else:
             self.on_turn = False

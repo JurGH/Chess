@@ -74,17 +74,3 @@ class Board():
             self.active_color_view = c.WHITE
             self.active_square_coordinates = self.square_coordinates_white_bottom
         return
-
-
-
-
-
-        
-
-
-                
-        
-        
-
-
-        
