@@ -97,6 +97,7 @@ class Game():
                 # evaluate if castling is possible when king is selected. 
                 if piece.type == "king":
                     self.castling.castling_eval(self.active_player, self.board)
+                    print(f" self.castling.long_castle_possible = {self.castling.long_castle_possible}")
                 self.active_player.select_piece(piece)
                 # selected a piece so returning True to play sound
                 self.state_turn = c.PIECE_SELECTED
@@ -112,8 +113,6 @@ class Game():
         return
     
     def get_king_castle_move_type(self, clicked_square: str) -> Optional[int]:
-        print(f"self.active_player.long_king_castle_square = {self.active_player.short_king_castle_square}")
-        print(f"self.castling.short_castle_possible = {self.castling.short_castle_possible}")
         if clicked_square == self.active_player.long_king_castle_square and self.castling.long_castle_possible:
             return c.LONG
         elif clicked_square == self.active_player.short_king_castle_square and self.castling.short_castle_possible:
@@ -122,10 +121,8 @@ class Game():
             return
 
     def handle_player_second_action(self, clicked_square: str) -> bool:
-        print(self.active_player.selected_piece.type)
         if self.active_player.selected_piece.type == "king":
             castle_move = self.get_king_castle_move_type(clicked_square)
-            print(f"castle move = {castle_move}")
             if castle_move is not None:
                 self.castle(castle_move)
                 self.state_turn = c.CASTLED
@@ -144,12 +141,7 @@ class Game():
             return
         
         if clicked_sq_tup in self.active_player.selected_piece.available_positions:
-            try:
-                self.active_player.selected_piece.turn_counter += 1
-            except AttributeError as e:
-                print(f"{e}, so not incrementing turn_counter for this piece")
             # checking for strike after each succesful move. No piece on square does nothing. 
-            
             piece_striked = self.strike_piece(clicked_square)
             self.active_player.selected_piece.move_piece(clicked_square)
             if piece_striked:
@@ -159,7 +151,6 @@ class Game():
                 # reposition pieces on occupied squares after moving piece
                 self.state_turn = c.PIECE_MOVED
                 return
-        print('should not happen')
         self.state_turn = c.INVALID_MOVE
         return
 

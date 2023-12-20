@@ -387,6 +387,7 @@ class King(Piece):
     def move_piece(self, position: str) -> None: # "11" etc. 
         self.position = position
         self.turn_counter += 1
+        print(f"moved king. incrementing turn counter. now {self.turn_counter}")
         return
 
 class Pawn(Piece): 
