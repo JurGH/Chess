@@ -18,6 +18,8 @@ class Draw_board():
         self.yellow_skull_path = os.path.join(self.assets_directory_2, "yellow_skull.png")
         self.red_strike_path = os.path.join(self.assets_directory_2, "red_strike_dot.png")
         self.red_skull_path = os.path.join(self.assets_directory_2, "red_skull.png")
+        self.yellow_bell_path = os.path.join(self.assets_directory_2, "yellow_bell.png")
+        self.red_bell_path = os.path.join(self.assets_directory_2, "red_bell.png")
         self.red_dot_image = pygame.image.load(self.red_dot_path)
         self.red_dot_image = pygame.transform.scale(self.red_dot_image, (c.DOT_IMAGE_SIZE))
         self.yellow_dot_image = pygame.image.load(self.yellow_dot_path)
@@ -30,6 +32,11 @@ class Draw_board():
         self.red_strike_image = pygame.transform.scale(self.red_strike_image, (c.STRIKED_DOT_IMAGE_SIZE))
         self.red_skull_image = pygame.image.load(self.red_skull_path)
         self.red_skull_image = pygame.transform.scale(self.red_skull_image, (c.SKULL_IMAGE_SIZE))
+        self.yellow_bell_image = pygame.image.load(self.yellow_bell_path)
+        self.yellow_bell_image = pygame.transform.scale(self.yellow_bell_image, (c.CASTLE_DOT_IMAGE_SIZE))
+        self.red_bell_image = pygame.image.load(self.red_bell_path)
+        self.red_bell_image = pygame.transform.scale(self.red_bell_image, (c.CASTLE_DOT_IMAGE_SIZE))
+
 
     # With a unicode key the character of a chess piece is retrieved
     # These characters are rendered as an image making use of the square coordinates
@@ -102,16 +109,44 @@ class Draw_board():
                 the_image = dot_image
             
             win.blit(the_image, piece_coordinates)
+
+    def draw_castling_dot(self, square_coordinates, selected_piece: object, castle_square: str, win: object):
+        if selected_piece.color == "WHITE":
+            castle_image = self.yellow_bell_image
+        else:
+            castle_image = self.red_bell_image
+
+        piece_x_coordinate = (square_coordinates[castle_square][c.COLUMN_IDX] - c.CASTLE_DOT_IMAGE_SIZE[0] / 2) + (c.SQUARE_HEIGHT / 2)
+        piece_y_coordinate = (square_coordinates[castle_square][c.ROW_IDX] - c.CASTLE_DOT_IMAGE_SIZE[1] / 2) + (c.SQUARE_WIDTH / 2)
+        piece_coordinates = (piece_x_coordinate, piece_y_coordinate)
+        
+        win.blit(castle_image, piece_coordinates)
+    
             
     def draw_skull(self, active_square_coordinates, occupied_squares, win):
         skull_image = self.yellow_skull_image
         win.blit(skull_image, (400, 25))
 
-    def draw_board(self, square_coordinates: dict[str:tuple], occupied_squares: list[dict[str: str, str: str, str: str]], pieces:list[object], selected_piece: object, check: bool, win:object) -> None:
+    def draw_board(self, game:object, win:object) -> None:
+        square_coordinates = game.board.active_square_coordinates
+        occupied_squares = game.board.occupied_squares
+        pieces = game.all_pieces
+        selected_piece = game.active_player.selected_piece
+        check = game.check
+        long_castle = game.castling.long_castle_possible
+        short_castle = game.castling.short_castle_possible
+
         self.draw_squares(win)
         self.draw_pieces(square_coordinates, pieces, win)
         if selected_piece is not None:
             self.draw_movement_dots(square_coordinates, occupied_squares, selected_piece, win)
+            if selected_piece.type == "king":
+                if long_castle:
+                    self.draw_castling_dot(square_coordinates, game.active_player.selected_piece, game.active_player.long_king_castle_square, win)
+                if short_castle:
+                    self.draw_castling_dot(square_coordinates, game.active_player.selected_piece, game.active_player.short_king_castle_square, win)
+            else:
+                pass
         else:
             pass
         if check:
