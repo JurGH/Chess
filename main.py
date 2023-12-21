@@ -69,8 +69,6 @@ if __name__ == "__main__":
     draw.load_images(c.PIECE_IMAGES)
     draw.load_selected_images(c.PIECE_IMAGES)
 
-
-
     num_of_click_in_turn = 0
     # running the game
     run = True
@@ -79,7 +77,6 @@ if __name__ == "__main__":
         WIN.fill(c.BACKGROUND_COLOR)
         draw.draw_board(game, WIN)
         pygame.display.update()
-
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

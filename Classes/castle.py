@@ -14,15 +14,10 @@ class Castling():
         self.short_castle_possible = False
         for piece in active_player.active_pieces:
             if piece.type == "king":
-                print("king found in castling eval")
-                print(f"king turn counter = {piece.turn_counter}")
                 if piece.turn_counter > 0:
-                    print("exiting the castling eval because king turn counter > 0")
                     return
             if piece.type == "rook":
-                print("rook found in castle eval")
                 if piece.turn_counter == 0:
-                    print("rook turn counter = 0")
                     if piece.castle_type == "long":
                         long_castle_req_met = True
                     if piece.castle_type == "short":

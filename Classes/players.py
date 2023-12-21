@@ -60,11 +60,12 @@ class Player():
             raise Exception("Changing turn not successful, expected True or False")
         return
     
-    def toggle_check(self) -> None:
-        if self.check_state is False:
-            self.check_state = True
-        else:
-            self.check_state = False
+    def set_check(self) -> None:
+        self.check_state = True
+        return
+    
+    def reset_check(self) -> None:
+        self.check_state = False
         return
     
     def add_score(self) -> None:

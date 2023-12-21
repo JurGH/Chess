@@ -95,9 +95,8 @@ class Game():
         for piece in self.active_player.active_pieces:
             if piece.position == clicked_square and piece.selectable is True:
                 # evaluate if castling is possible when king is selected. 
-                if piece.type == "king":
+                if piece.type == "king" and self.active_player.check_state is False:
                     self.castling.castling_eval(self.active_player, self.board)
-                    print(f" self.castling.long_castle_possible = {self.castling.long_castle_possible}")
                 self.active_player.select_piece(piece)
                 # selected a piece so returning True to play sound
                 self.state_turn = c.PIECE_SELECTED
@@ -161,7 +160,6 @@ class Game():
                     piece_position = piece.position
                     piece_color = piece.color
                     piece_type = piece.promotion_type
-                    print(f"removing {self.all_pieces[index]} from game because of promotion")
                     del self.all_pieces[index]
                     self.all_pieces.append(pi.PIECE_CREATION_DICT[piece_type](piece_position, piece_color))
                     return
@@ -170,7 +168,6 @@ class Game():
     def strike_piece(self, position) -> bool:
         for idx, piece in enumerate(self.all_pieces):
             if position == piece.position:
-                print(f"removing {self.all_pieces[idx]} from game")
                 del self.all_pieces[idx]
                 return True
             else:
@@ -241,6 +238,7 @@ class Game():
         for player in self.players:
             player.change_turn()
         self.set_active_player()
+        self.active_player.reset_check()
         # make sure new piece after pawn promotion is assigned to the correct player
         self.assign_pieces_to_players()
         self.store_available_positions_player_pieces()
@@ -250,6 +248,6 @@ class Game():
         self.eval_check()
         self.eval_checkmate_or_stalemate()
         self.state_turn = c.PIECE_NOT_SELECTED
-        if self.check: 
-            print(f"player {self.active_player.name} is checked now")
+        if self.check:
+            self.active_player.set_check()
         return

@@ -480,6 +480,7 @@ class Pawn(Piece):
         elif self.color == "BLACK" and int(position[c.ROW_IDX]) == min(c.BOARD_ROWS):
             self.promote_pawn("queen")
         self.position = position
+        self.turn_counter += 1
         return
     
     def promote_pawn(self, type) -> None:
