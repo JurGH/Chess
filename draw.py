@@ -1,42 +1,20 @@
 import pygame
 import os
 import Functionality.constants as c
+import time 
 
 class Draw_board():
     
     def __init__(self):
-        self.piece_image_info: list[dict[str:str, str: pygame.Surface, str: tuple]]
-        self.piece_image_info: list[dict[str:str, str: pygame.Surface, str: tuple]]
+        self.piece_image_info: list[dict[str:str, str:pygame.Surface, str:tuple]]
+        self.piece_image_info: list[dict[str:str, str:pygame.Surface, str:tuple]]
+        self.assets: list[dict[str:str, str:pygame.Surface, str:tuple]]
         self.piece_image_info = []
         self.piece_selected_image_info = []
+        self.assets = []
         self.current_directory = os.path.dirname(__file__)
         self.assets_directory = os.path.join(self.current_directory, "Assets")
         self.assets_directory_2 = os.path.join(self.assets_directory, "img\\")
-        self.red_dot_path = os.path.join(self.assets_directory_2, "red_dot.png")
-        self.yellow_dot_path = os.path.join(self.assets_directory_2, "yellow_dot.png")
-        self.yellow_strike_path = os.path.join(self.assets_directory_2, "yellow_strike_dot.png")
-        self.yellow_skull_path = os.path.join(self.assets_directory_2, "yellow_skull.png")
-        self.red_strike_path = os.path.join(self.assets_directory_2, "red_strike_dot.png")
-        self.red_skull_path = os.path.join(self.assets_directory_2, "red_skull.png")
-        self.yellow_bell_path = os.path.join(self.assets_directory_2, "yellow_bell.png")
-        self.red_bell_path = os.path.join(self.assets_directory_2, "red_bell.png")
-        self.red_dot_image = pygame.image.load(self.red_dot_path)
-        self.red_dot_image = pygame.transform.scale(self.red_dot_image, (c.DOT_IMAGE_SIZE))
-        self.yellow_dot_image = pygame.image.load(self.yellow_dot_path)
-        self.yellow_dot_image = pygame.transform.scale(self.yellow_dot_image, (c.DOT_IMAGE_SIZE))
-        self.yellow_strike_image = pygame.image.load(self.yellow_strike_path)
-        self.yellow_strike_image = pygame.transform.scale(self.yellow_strike_image, (c.STRIKED_DOT_IMAGE_SIZE))
-        self.yellow_skull_image = pygame.image.load(self.yellow_skull_path)
-        self.yellow_skull_image = pygame.transform.scale(self.yellow_skull_image, (c.SKULL_IMAGE_SIZE))
-        self.red_strike_image = pygame.image.load(self.red_strike_path)
-        self.red_strike_image = pygame.transform.scale(self.red_strike_image, (c.STRIKED_DOT_IMAGE_SIZE))
-        self.red_skull_image = pygame.image.load(self.red_skull_path)
-        self.red_skull_image = pygame.transform.scale(self.red_skull_image, (c.SKULL_IMAGE_SIZE))
-        self.yellow_bell_image = pygame.image.load(self.yellow_bell_path)
-        self.yellow_bell_image = pygame.transform.scale(self.yellow_bell_image, (c.CASTLE_DOT_IMAGE_SIZE))
-        self.red_bell_image = pygame.image.load(self.red_bell_path)
-        self.red_bell_image = pygame.transform.scale(self.red_bell_image, (c.CASTLE_DOT_IMAGE_SIZE))
-
 
     # With a unicode key the character of a chess piece is retrieved
     # These characters are rendered as an image making use of the square coordinates
@@ -49,15 +27,15 @@ class Draw_board():
                 for pii in self.piece_selected_image_info:
                     if pii["name"] == piece_color_and_type:
                         piece_image = pii["image"]
-                        piece_scale = pii["scale"]
+                        piece_size = pii["size"]
             else:
                 for pii in self.piece_image_info:
                     if pii["name"] == piece_color_and_type:
                         piece_image = pii["image"]
-                        piece_scale = pii["scale"]
+                        piece_size = pii["size"]
 
-            piece_x_coordinate = (square_coordinates[piece.position][0] - piece_scale[0] / 2) + (c.SQUARE_HEIGHT / 2)
-            piece_y_coordinate = (square_coordinates[piece.position][1] - piece_scale[1] / 2) + (c.SQUARE_WIDTH / 2)
+            piece_x_coordinate = (square_coordinates[piece.position][0] - piece_size[0] / 2) + (c.SQUARE_HEIGHT / 2)
+            piece_y_coordinate = (square_coordinates[piece.position][1] - piece_size[1] / 2) + (c.SQUARE_WIDTH / 2)
             piece_coordinates = (piece_x_coordinate, piece_y_coordinate)
             win.blit(piece_image, piece_coordinates)
 
@@ -87,12 +65,14 @@ class Draw_board():
         for square in occupied_squares:
             square_str = square["position"][c.COLUMN_IDX] + square["position"][c.ROW_IDX]
             all_occupied_squares.append(square_str)
-        if selected_piece.color == "WHITE":
-            dot_image = self.yellow_dot_image
-            strike_image = self.yellow_strike_image
-        else:
-            dot_image = self.red_dot_image
-            strike_image = self.red_strike_image
+        for asset in self.assets:
+            if selected_piece.color == asset["color"]:
+                if asset["name"] == "dot": 
+                    dot_image = asset["image"]
+                if asset["name"] == "strike_dot":
+                    strike_image = asset["image"]
+                else:
+                    pass
 
         for available_position in selected_piece.available_positions:
             position_str = str(available_position[0]) + str(available_position[1])
@@ -111,10 +91,13 @@ class Draw_board():
             win.blit(the_image, piece_coordinates)
 
     def draw_castling_dot(self, square_coordinates, selected_piece: object, castle_square: str, win: object):
-        if selected_piece.color == "WHITE":
-            castle_image = self.yellow_bell_image
-        else:
-            castle_image = self.red_bell_image
+
+        for asset in self.assets:
+            if selected_piece.color == asset["color"]:
+                if asset["name"] == "bell": 
+                    castle_image = asset["image"]
+                else:
+                    pass
 
         piece_x_coordinate = (square_coordinates[castle_square][c.COLUMN_IDX] - c.CASTLE_DOT_IMAGE_SIZE[0] / 2) + (c.SQUARE_HEIGHT / 2)
         piece_y_coordinate = (square_coordinates[castle_square][c.ROW_IDX] - c.CASTLE_DOT_IMAGE_SIZE[1] / 2) + (c.SQUARE_WIDTH / 2)
@@ -123,9 +106,15 @@ class Draw_board():
         win.blit(castle_image, piece_coordinates)
     
             
-    def draw_skull(self, active_square_coordinates, occupied_squares, win):
-        skull_image = self.yellow_skull_image
-        win.blit(skull_image, (400, 25))
+    # def draw_skull(self, active_square_coordinates, occupied_squares, win):
+    #     for asset in self.assets:
+    #         if selected_piece.color == asset["color"]:
+    #             if asset["name"] == "skull": 
+    #                 skull_image = asset["image"]
+    #             else:
+    #                 pass
+
+        # win.blit(skull_image, (400, 25))
 
     def draw_board(self, game:object, win:object) -> None:
         square_coordinates = game.board.active_square_coordinates
@@ -149,29 +138,50 @@ class Draw_board():
                 pass
         else:
             pass
-        if check:
-            self.draw_skull(square_coordinates, occupied_squares, win)
-        else:
-            pass
+        # if check:
+        #     self.draw_skull(square_coordinates, occupied_squares, win)
+        # else:
+        #     pass
+        # if game.checkmate:
+        #     win.blit(self.end_screen_image, (0,0))
+                
+    
+    def draw_checkmate(self, game: object, win: object) -> None:
+        print("drawing in checkmate now")
+        # self.draw_board(game, win)
+        win.blit(self.end_screen_image, (0,0))
 
-    def load_images(self, pieces_image_data: c.PIECE_IMAGES):
+
+    def load_piece_images(self, pieces_image_data: c.PIECE_IMAGES):
         for piece in pieces_image_data:
             piece_name = piece["name"]
             piece_normal_path = piece["normal_path"]
-            piece_scale = piece["scale"]
+            piece_size = piece["size"]
             piece_image_path = f'{self.assets_directory_2}{piece_normal_path}'
             piece_image = pygame.image.load(piece_image_path)
-            piece_image = pygame.transform.scale(piece_image, (piece_scale))
-            self.piece_image_info.append({"name": piece_name, "image": piece_image, "scale": piece_scale})
+            piece_image = pygame.transform.scale(piece_image, (piece_size))
+            self.piece_image_info.append({"name": piece_name, "image": piece_image, "size": piece_size})
         return
     
-    def load_selected_images(self, pieces_image_data: c.PIECE_IMAGES):
+    def load_selected_piece_images(self, pieces_image_data: c.PIECE_IMAGES):
         for piece in pieces_image_data:
             piece_name = piece["name"]
             piece_selected_path = piece["selected_path"]
-            piece_scale = piece["scale"]
+            piece_size = piece["size"]
             piece_image_path = f'{self.assets_directory_2}{piece_selected_path}'
             piece_image = pygame.image.load(piece_image_path)
-            piece_image = pygame.transform.scale(piece_image, (piece_scale))
-            self.piece_selected_image_info.append({"name": piece_name, "image": piece_image, "scale": piece_scale})
+            piece_image = pygame.transform.scale(piece_image, (piece_size))
+            self.piece_selected_image_info.append({"name": piece_name, "image": piece_image, "size": piece_size})
         return
+    
+    def load_asset_images(self, assets: c.ASSETS) -> None:
+        for asset in assets: 
+            asset_color = asset["color"]
+            asset_name = asset["name"]
+            asset_path = asset["path"]
+            asset_size = asset["size"]
+            asset_image_path = f"{self.assets_directory_2}{asset_path}"
+            asset_image = pygame.image.load(asset_image_path)
+            asset_image = pygame.transform.scale(asset_image, (asset_size))
+            self.assets.append({"color": asset_color, "name": asset_name, "image": asset_image, "size": asset_size})
+        

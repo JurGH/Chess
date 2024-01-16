@@ -27,7 +27,7 @@ BIG_PIECE_IMAGE_SIZE = (SCREEN_HEIGHT * BIG_PIECE_HEIGHT_SCALE, SCREEN_WIDTH * B
 DOT_IMAGE_SIZE = (SCREEN_HEIGHT * DOT_SCALE, SCREEN_WIDTH * DOT_SCALE)
 STRIKED_DOT_IMAGE_SIZE = (SCREEN_HEIGHT * STRIKE_DOT_SCALE, SCREEN_WIDTH * STRIKE_DOT_SCALE)
 CASTLE_DOT_IMAGE_SIZE = (SCREEN_HEIGHT * CASTLE_DOT_SCALE, SCREEN_WIDTH * CASTLE_DOT_SCALE)
-
+END_SCREEN_IMAGE_SIZE = (SCREEN_HEIGHT, SCREEN_WIDTH)
 SKULL_IMAGE_SIZE = (40, 40)
 #SKULL_IMAGE_SIZE = (SCREEN_HEIGHT / NUM_OF_COLS, SCREEN_WIDTH / NUM_OF_ROWS)
 
@@ -156,75 +156,127 @@ PIECE_IMAGES = [
       "name": "black_pawn"
      ,"normal_path" :"black_pawn.png"
      ,"selected_path" :"selected_black_pawn.png" 
-     ,"scale" : PAWN_IMAGE_SIZE
+     ,"size" : PAWN_IMAGE_SIZE
     },
     {
       "name": "black_rook"
      ,"normal_path" :"black_rook.png" 
      ,"selected_path" :"selected_black_rook.png" 
-     ,"scale" : ROOK_IMAGE_SIZE
+     ,"size" : ROOK_IMAGE_SIZE
     },
     {
       "name": "black_knight"
      ,"normal_path" :"black_knight.png" 
      ,"selected_path" :"selected_black_knight.png" 
-     ,"scale" : KNIGHT_IMAGE_SIZE
+     ,"size" : KNIGHT_IMAGE_SIZE
     },
     {
      "name": "black_bishop"
      ,"normal_path" :"black_bishop.png" 
      ,"selected_path" :"selected_black_bishop.png" 
-     ,"scale" : BIG_PIECE_IMAGE_SIZE
+     ,"size" : BIG_PIECE_IMAGE_SIZE
     },
     {
      "name": "black_king"
      ,"normal_path" :"black_king.png" 
      ,"selected_path" :"selected_black_king.png" 
-     ,"scale" : BIG_PIECE_IMAGE_SIZE
+     ,"size" : BIG_PIECE_IMAGE_SIZE
     },
     {
      "name": "black_queen"
      ,"normal_path" :"black_queen.png" 
      ,"selected_path" :"selected_black_queen.png" 
-     ,"scale" : BIG_PIECE_IMAGE_SIZE
+     ,"size" : BIG_PIECE_IMAGE_SIZE
     },
     {
       "name": "white_pawn"
      ,"normal_path" :"white_pawn.png" 
      ,"selected_path" :"selected_white_pawn.png" 
-     ,"scale" : PAWN_IMAGE_SIZE
+     ,"size" : PAWN_IMAGE_SIZE
     },
     {
       "name": "white_rook"
      ,"normal_path" :"white_rook.png" 
      ,"selected_path" :"selected_white_rook.png" 
-     ,"scale" : ROOK_IMAGE_SIZE
+     ,"size" : ROOK_IMAGE_SIZE
     },
     {
       "name": "white_knight"
      ,"normal_path" :"white_knight.png" 
      ,"selected_path" :"selected_white_knight.png" 
-     ,"scale" : KNIGHT_IMAGE_SIZE
+     ,"size" : KNIGHT_IMAGE_SIZE
     },
     {
      "name": "white_bishop"
      ,"normal_path" :"white_bishop.png" 
      ,"selected_path" :"selected_white_bishop.png" 
-     ,"scale" : BIG_PIECE_IMAGE_SIZE
+     ,"size" : BIG_PIECE_IMAGE_SIZE
     },
     {
      "name": "white_king"
      ,"normal_path" :"white_king.png" 
      ,"selected_path" :"selected_white_king.png" 
-     ,"scale" : BIG_PIECE_IMAGE_SIZE
+     ,"size" : BIG_PIECE_IMAGE_SIZE
     },
     {
      "name": "white_queen"
      ,"normal_path" :"white_queen.png" 
      ,"selected_path" :"selected_white_queen.png" 
-     ,"scale" : BIG_PIECE_IMAGE_SIZE
+     ,"size" : BIG_PIECE_IMAGE_SIZE
     }
 ]
+
+ASSETS = [
+    {
+     "color": "WHITE"
+    ,"name": "skull"
+    ,"path": "yellow_skull.png"
+    ,"size": SKULL_IMAGE_SIZE
+    },
+    {
+     "color": "BLACK"
+    ,"name": "skull"
+    ,"path": "red_skull.png"
+    ,"size": SKULL_IMAGE_SIZE
+    },
+    {
+     "color": "WHITE"
+    ,"name": "dot"
+    ,"path": "yellow_dot.png"
+    ,"size": DOT_IMAGE_SIZE
+    },
+    {
+     "color": "BLACK"
+    ,"name": "dot"
+    ,"path": "red_dot.png"
+    ,"size": DOT_IMAGE_SIZE
+    },
+    {
+     "color": "WHITE"
+    ,"name": "strike_dot"
+    ,"path": "yellow_strike_dot.png"
+    ,"size": STRIKED_DOT_IMAGE_SIZE
+    },
+    {
+     "color": "BLACK"
+    ,"name": "strike_dot"
+    ,"path": "red_strike_dot.png"
+    ,"size": STRIKED_DOT_IMAGE_SIZE
+    },
+    {
+     "color": "WHITE"
+    ,"name": "bell"
+    ,"path": "yellow_bell.png"
+    ,"size": CASTLE_DOT_IMAGE_SIZE
+    },
+    {
+     "color": "BLACK"
+    ,"name": "bell"
+    ,"path": "red_bell.png"
+    ,"size": CASTLE_DOT_IMAGE_SIZE
+    }
+]
+
 
 STRAIGHT = ["queen", "rook"]
 DIAGONAL = ["queen", "bishop"]
