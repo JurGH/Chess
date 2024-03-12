@@ -53,24 +53,6 @@ if __name__ == "__main__":
     pygame.display.set_caption("Chess")
     clock = pygame.time.Clock()
 
-    # # creating all game elements
-    # board = b.Board()
-    # all_players = create_players()
-    # all_pieces = create_pieces()
-    # castling = ca.Castling()
-
-
-    # # setting up game class with game elements stored
-    # game = g.Game(board, all_players, all_pieces, castling)
-
-    # # assign pieces to players and fill board squares with pieces
-    # game.set_up_game()
-    # # creating draw class to display all game elements to pygame client
-    # draw = d.Draw_board()
-    # draw.load_images(c.PIECE_IMAGES)
-    # draw.load_selected_images(c.PIECE_IMAGES)
-
-
     def main():
         # creating all game elements
         board = b.Board()
@@ -91,6 +73,7 @@ if __name__ == "__main__":
         draw.load_asset_images(c.ASSETS)
     # running the game
         run = True
+        game_on = True
         while run:
 
             WIN.fill(c.BACKGROUND_COLOR)
@@ -107,33 +90,33 @@ if __name__ == "__main__":
 
                     elif event.key == pygame.K_s:
                         game.board.toggle_square_coordinates()
-
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == c.LEFT:
-                        click_x, click_y = event.pos
-                        clicked_square = game.get_clicked_square(click_x, click_y)
-                        if clicked_square is None:
-                            print("this should never happen, clicked square is none")
+                    if game_on is True: # game_on is false when checkmate or stalemate is true, so game ends but drawing continues
+                        if event.button == c.LEFT:
+                            click_x, click_y = event.pos
+                            clicked_square = game.get_clicked_square(click_x, click_y)
+                            if clicked_square is None:
+                                print("this should never happen, clicked square is none")
 
-                        game.handle_player_action(clicked_square)
-                        if game.state_turn != c.PIECE_SELECTED and game.state_turn != c.PIECE_NOT_SELECTED and game.state_turn != c.PIECE_NOT_MOVED:
-                            sound_library[game.state_turn].play(0)
-                        else:
-                            pass
-                        
-                        game.reset_turn()
-                        
-                        if game.checkmate is True:
-                            for player in all_players:
-                                if player.on_turn is False:
-                                    print(f"Gratz {player.name} you won!!")
-                                if player.on_turn is True:
-                                    print(f"You lost {player.name}")
-                            run = False
-                        if game.stalemate is True:
-                            print("It's a draw")
-                            run = False
-            draw.draw_board(game, WIN)
+                            game.handle_player_action(clicked_square)
+                            if game.state_turn != c.PIECE_SELECTED and game.state_turn != c.PIECE_NOT_SELECTED and game.state_turn != c.PIECE_NOT_MOVED:
+                                sound_library[game.state_turn].play(0)
+                            else:
+                                pass
+                            
+                            game.reset_turn()
+                            game.checkmate = True
+                            if game.checkmate is True:
+                                for player in all_players:
+                                    if player.on_turn is False:
+                                        print(f"Gratz {player.name} you won!!")
+                                    if player.on_turn is True:
+                                        print(f"You lost {player.name}")
+                                game_on = False
+                            if game.stalemate is True:
+                                print("It's a draw")
+                                game_on = False
+                draw.draw_board(game, WIN)
         # start een loop play_again ofzo, die loop heeft een eigen event loop die knop opnieuw spelen tekent
         # als op de knop gedrukt wordt moet terug worden gegaan naar de main loop. 
         # while True:

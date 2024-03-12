@@ -15,7 +15,9 @@ class Draw_board():
         self.current_directory = os.path.dirname(__file__)
         self.assets_directory = os.path.join(self.current_directory, "Assets")
         self.assets_directory_2 = os.path.join(self.assets_directory, "img\\")
-
+        self.font = pygame.font.Font(None,round(c.SCREEN_HEIGHT * c.FONT_SCALE))
+        self.top_rect = pygame.Rect(c.END_SCREEN_TEXT_TOP)
+        self.bottom_rect = pygame.Rect(c.END_SCREEN_TEXT_BOTTOM)
     # With a unicode key the character of a chess piece is retrieved
     # These characters are rendered as an image making use of the square coordinates
     # To do: Selected pieces will be rendered differently, maybe bigger font, bold or highlighted
@@ -106,16 +108,6 @@ class Draw_board():
         win.blit(castle_image, piece_coordinates)
     
             
-    # def draw_skull(self, active_square_coordinates, occupied_squares, win):
-    #     for asset in self.assets:
-    #         if selected_piece.color == asset["color"]:
-    #             if asset["name"] == "skull": 
-    #                 skull_image = asset["image"]
-    #             else:
-    #                 pass
-
-        # win.blit(skull_image, (400, 25))
-
     def draw_board(self, game:object, win:object) -> None:
         square_coordinates = game.board.active_square_coordinates
         occupied_squares = game.board.occupied_squares
@@ -139,17 +131,29 @@ class Draw_board():
         else:
             pass
         # if check:
-        #     self.draw_skull(square_coordinates, occupied_squares, win)
+        #     # self.draw_skull(square_coordinates, occupied_squares, win)
         # else:
         #     pass
-        # if game.checkmate:
-        #     win.blit(self.end_screen_image, (0,0))
+        if game.checkmate:
+            self.draw_checkmate(win)
                 
     
-    def draw_checkmate(self, game: object, win: object) -> None:
+    def draw_checkmate(self, win: object) -> None:
         print("drawing in checkmate now")
         # self.draw_board(game, win)
-        win.blit(self.end_screen_image, (0,0))
+        
+        for asset in self.assets:
+            if asset["name"] == "skull": 
+                skull_image = asset["image"]
+                break
+            else:
+                pass
+        top_text = self.font.render('Player 1 has won', True, 'black')
+        width_rect = top_text.get_width()
+        height_rect = top_text.get_height()
+        pygame.draw.rect(win, 'white', self.top_rect, width_rect)
+        win.blit(top_text, (200, 50))
+        win.blit(skull_image, (200, 200))
 
 
     def load_piece_images(self, pieces_image_data: c.PIECE_IMAGES):

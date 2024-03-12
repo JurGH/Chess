@@ -72,10 +72,3 @@ class Player():
         self.score += 1
         return
        
-    def test(self):
-        movement_types = ["LONG", "SHORT"]
-        check_types = ["KING_CASTLE_SQUARE", "ROOK_CASTLE_SQAURE", "TO_CHECK_CASTLE_SQUARES"]
-        for mt in movement_types:
-            for ct in check_types:
-                self.self_variable = "_".join(mt, ct)
-                constant_variable = "_".join(self.color, mt, ct)

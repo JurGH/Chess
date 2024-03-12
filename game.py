@@ -14,7 +14,7 @@ class Game():
         self.castling = castling
         self.active_player = None
         self.selected_piece = None
-        self.check = True
+        self.check = True  # needs to be set to False after testing
         self.stalemate = False
         self.checkmate = False
         self.state_turn = c.PIECE_NOT_SELECTED
