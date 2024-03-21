@@ -105,7 +105,6 @@ if __name__ == "__main__":
                                 pass
                             
                             game.reset_turn()
-                            game.checkmate = True
                             if game.checkmate is True:
                                 for player in all_players:
                                     if player.on_turn is False:
@@ -116,6 +115,32 @@ if __name__ == "__main__":
                             if game.stalemate is True:
                                 print("It's a draw")
                                 game_on = False
+                    else: #game on false so end screen shown
+                        if event.button == c.LEFT:
+                            click_x, click_y = event.pos
+                            decision = game.get_clicked_button(click_x, click_y
+                                                    ,draw.play_again_button_range_x
+                                                    ,draw.play_again_button_range_y
+                                                    ,draw.quit_button_range_x
+                                                    ,draw.quit_button_range_y)
+                            print(decision)
+                            if decision == c.QUIT:
+                                pygame.quit()
+                            
+                            if decision == c.PLAY_AGAIN:
+                                board = b.Board()
+                                all_pieces = create_pieces()
+                                castling = ca.Castling()
+                                for player in all_players:
+                                    player.reset_player()
+                                # setting up game class with game elements stored
+                                game = g.Game(board, all_players, all_pieces, castling)
+                                game.set_up_game()
+                                game_on = True
+
+                            
+
+
                 draw.draw_board(game, WIN)
         # start een loop play_again ofzo, die loop heeft een eigen event loop die knop opnieuw spelen tekent
         # als op de knop gedrukt wordt moet terug worden gegaan naar de main loop. 

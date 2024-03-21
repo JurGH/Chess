@@ -12,14 +12,18 @@ class Game():
         self.players = players
         self.all_pieces = all_pieces
         self.castling = castling
+
+    def set_up_board (self) -> None:
         self.active_player = None
         self.selected_piece = None
         self.check = True  # needs to be set to False after testing
         self.stalemate = False
         self.checkmate = False
         self.state_turn = c.PIECE_NOT_SELECTED
+        self.winning_player = None
     
     def set_up_game(self) -> None:
+        self.set_up_board()
         self.set_active_player()
         self.assign_pieces_to_players()
         self.board.position_pieces(self.all_pieces)
@@ -77,6 +81,27 @@ class Game():
                 if click_y > coordinates[1] and click_y < coordinates[1] + c.SQUARE_HEIGHT:
                     return name
         return
+    
+    def get_clicked_button(self, click_x: float, click_y: float
+                           ,play_again_button_range_x: tuple
+                           ,play_again_button_range_y: tuple
+                           ,quit_button_range_x: tuple
+                           ,quit_button_range_y: tuple) -> Optional[int]:
+        decision = c.NO_DECISION
+
+        print(f"click_x = {click_x}, click_y = {click_y}, play_again_button_range_x = {play_again_button_range_x}, play_again_button_range_y = {play_again_button_range_y}, quit_button_range_x = {quit_button_range_x}, quit_button_range_y = {quit_button_range_y} ")
+
+        if click_x >= play_again_button_range_x[0] and click_x <= play_again_button_range_x[1]:
+            if click_y >= play_again_button_range_y[0] and click_y <= play_again_button_range_y[1]:
+                decision = c.PLAY_AGAIN
+                return decision
+    
+        if click_x >= quit_button_range_x[0] and click_x <= quit_button_range_x[1]:
+            if click_y >= quit_button_range_y[0] and click_y <= quit_button_range_y[1]:
+                decision = c.QUIT
+                return decision
+            
+        return decision
     
     def handle_player_action(self, clicked_square: str) -> bool:
         if self.state_turn != c.PIECE_SELECTED:
@@ -219,6 +244,9 @@ class Game():
                 return
         if self.check is True:
             self.checkmate = True
+            for player in self.players:
+                if player.on_turn is False:
+                    self.winning_player = player
         else:
             self.stalemate = True
         return
@@ -251,3 +279,17 @@ class Game():
         if self.check:
             self.active_player.set_check()
         return
+    
+    def reset_game(self) -> None:
+        if self.checkmate:
+            self.winning_player.add_score()
+        for player in self.players:
+            player.change_color()
+            if player.color == c.PLAYER_COLORS[c.WHITE]:
+                player.on_turn = True
+
+        for piece in self.all_pieces:
+            del piece
+        self.set_up_game()
+
+        

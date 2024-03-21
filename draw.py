@@ -1,7 +1,6 @@
 import pygame
 import os
 import Functionality.constants as c
-import time 
 
 class Draw_board():
     
@@ -16,8 +15,12 @@ class Draw_board():
         self.assets_directory = os.path.join(self.current_directory, "Assets")
         self.assets_directory_2 = os.path.join(self.assets_directory, "img\\")
         self.font = pygame.font.Font(None,round(c.SCREEN_HEIGHT * c.FONT_SCALE))
-        self.top_rect = pygame.Rect(c.END_SCREEN_TEXT_TOP)
-        self.bottom_rect = pygame.Rect(c.END_SCREEN_TEXT_BOTTOM)
+        self.play_again_button_range_x = ()
+        self.play_again_button_range_y = ()
+        self.quit_button_range_x = ()
+        self.quit_button_range_y = ()
+        
+
     # With a unicode key the character of a chess piece is retrieved
     # These characters are rendered as an image making use of the square coordinates
     # To do: Selected pieces will be rendered differently, maybe bigger font, bold or highlighted
@@ -134,26 +137,117 @@ class Draw_board():
         #     # self.draw_skull(square_coordinates, occupied_squares, win)
         # else:
         #     pass
+
+        if game.checkmate or game.stalemate:
+            for asset in self.assets:
+                if asset["name"] == "skull" and game.checkmate: 
+                    end_screen_image = asset["image"]
+                    break
+                if asset["name"] == "stalemate" and game.stalemate:
+                    end_screen_image = asset["image"]
+                    break
+                else:
+                    pass
+
+            self.draw_game_over(win, game, end_screen_image)
+
+    def create_end_screen(self, game: object) -> dict[pygame.Rect]:
+        
+        end_screen_dict = {}
+        
         if game.checkmate:
-            self.draw_checkmate(win)
-                
+            top_text = f'{game.winning_player.name} has won'
+            
+        if game.stalemate:
+            top_text = "It's a draw"
+
+        
+        top_text_size = self.font.size(top_text)
+        top_start_y = ((c.SCREEN_HEIGHT / 4) - top_text_size[c.HEIGHT])
+        top_start_x = ((c.SCREEN_WIDTH / 2) - (top_text_size[c.WIDTH] / 2))
+        top_text_box = self.font.render(top_text, True, c.COLORS["GOLD"])
+        top_text_rect = top_text_box.get_rect()
+        top_rect = pygame.Rect(top_start_x, top_start_y,  top_text_size[c.WIDTH] * 1.05, top_text_size[c.HEIGHT] * 1.05)
+        top_text_rect.center = top_rect.center
+
+        bottom_text = "Would you like to play again?"
+        bottom_text_size = self.font.size(bottom_text)
+        bottom_start_y = ((c.SCREEN_HEIGHT * 0.75) + bottom_text_size[c.HEIGHT])
+        bottom_start_x = ((c.SCREEN_WIDTH / 2) - (bottom_text_size[c.WIDTH] / 2))
+        bottom_text_box = self.font.render(bottom_text, True, c.COLORS["GOLD"])
+        bottom_text_rect = bottom_text_box.get_rect()
+        bottom_rect = pygame.Rect(bottom_start_x, bottom_start_y,  bottom_text_size[c.WIDTH] * 1.05, bottom_text_size[c.HEIGHT] * 1.05)
+        bottom_text_rect.center = bottom_rect.center
+
+        play_again_text = "Play Again"
+        play_again_size = bottom_rect.size
+        play_again_width = play_again_size[0] / 2
+        play_again_start_y = (bottom_rect[1] + bottom_rect[3])
+        play_again_start_x = bottom_start_x
+        play_again_text_box = self.font.render(play_again_text, True, "green")
+        play_again_text_rect = play_again_text_box.get_rect()
+        play_again_rect = pygame.Rect(play_again_start_x, play_again_start_y, play_again_width, play_again_size[c.HEIGHT])
+        play_again_text_rect.center = play_again_rect.center
+
+        quit_text = "Quit"
+        quit_size = bottom_rect.size
+        quit_width = quit_size[0] / 2
+        quit_start_y = (bottom_rect[1] + bottom_rect[3])
+        quit_start_x = bottom_start_x + play_again_width
+        quit_text_box = self.font.render(quit_text, True, "red")
+        quit_text_rect = quit_text_box.get_rect()
+        quit_rect = pygame.Rect(quit_start_x, quit_start_y, quit_width, quit_size[c.HEIGHT])
+        quit_text_rect.center = quit_rect.center
+
+        end_screen_dict.update({"top_text_box": top_text_box
+                                ,"top_text_rect": top_text_rect
+                                ,"top_rect": top_rect
+                                ,"bottom_text_box": bottom_text_box
+                                ,"bottom_text_rect": bottom_text_rect
+                                ,"bottom_rect": bottom_rect
+                                ,"play_again_text_box": play_again_text_box
+                                ,"play_again_text_rect": play_again_text_rect
+                                ,"play_again_rect": play_again_rect
+                                ,"quit_text_box": quit_text_box
+                                ,"quit_text_rect": quit_text_rect
+                                ,"quit_rect": quit_rect
+                                })
+        
+        return end_screen_dict
     
-    def draw_checkmate(self, win: object) -> None:
-        print("drawing in checkmate now")
+    def get_end_screen_buttons(self, end_screen_dict: dict) -> dict:
+        play_again_button_x_min = end_screen_dict["play_again_rect"][0]
+        play_again_button_x_max = end_screen_dict["play_again_rect"][0] + end_screen_dict["play_again_rect"][2]
+        play_again_button_y_min = end_screen_dict["play_again_rect"][1]
+        play_again_button_y_max = end_screen_dict["play_again_rect"][1] + end_screen_dict["play_again_rect"][3]
+        quit_button_x_min = end_screen_dict["quit_rect"][0]
+        quit_button_x_max = end_screen_dict["quit_rect"][0] + end_screen_dict["play_again_rect"][2]
+        quit_button_y_min = end_screen_dict["quit_rect"][1]
+        quit_button_y_max = end_screen_dict["quit_rect"][1] + end_screen_dict["play_again_rect"][3]
+
+        self.play_again_button_range_x = (play_again_button_x_min, play_again_button_x_max)
+        self.play_again_button_range_y = (play_again_button_y_min, play_again_button_y_max)
+        self.quit_button_range_x = (quit_button_x_min, quit_button_x_max)
+        self.quit_button_range_y = (quit_button_y_min, quit_button_y_max)
+        
+
+    
+    def draw_game_over(self, win: object, game: object, end_screen_image: pygame.image) -> None:
         # self.draw_board(game, win)
         
-        for asset in self.assets:
-            if asset["name"] == "skull": 
-                skull_image = asset["image"]
-                break
-            else:
-                pass
-        top_text = self.font.render('Player 1 has won', True, 'black')
-        width_rect = top_text.get_width()
-        height_rect = top_text.get_height()
-        pygame.draw.rect(win, 'white', self.top_rect, width_rect)
-        win.blit(top_text, (200, 50))
-        win.blit(skull_image, (200, 200))
+        end_screen_dict = self.create_end_screen(game)
+        self.get_end_screen_buttons(end_screen_dict)
+        pygame.draw.rect(win, 'black', end_screen_dict["top_rect"], 0, 6, 6, 6, 6)
+        win.blit(end_screen_dict["top_text_box"], end_screen_dict["top_text_rect"])
+        pygame.draw.rect(win, 'black', end_screen_dict["bottom_rect"], 0, 6, 6, 6, 6)
+        win.blit(end_screen_dict["bottom_text_box"], end_screen_dict["bottom_text_rect"])
+        pygame.draw.rect(win, 'black', end_screen_dict["play_again_rect"], 0, 6, 6, 6, 6)
+        win.blit(end_screen_dict["play_again_text_box"], end_screen_dict["play_again_text_rect"])
+        pygame.draw.rect(win, 'black', end_screen_dict["quit_rect"], 0, 6, 6, 6, 6)
+        win.blit(end_screen_dict["quit_text_box"], end_screen_dict["quit_text_rect"])
+        end_screen_y = ((c.SCREEN_HEIGHT / 2) - (c.END_SCREEN_IMAGE_SIZE[c.HEIGHT]/2))
+        end_screen_x= ((c.SCREEN_WIDTH / 2) - (c.END_SCREEN_IMAGE_SIZE[c.WIDTH]/2))
+        win.blit(end_screen_image, (end_screen_y, end_screen_x))
 
 
     def load_piece_images(self, pieces_image_data: c.PIECE_IMAGES):

@@ -1,5 +1,5 @@
-SCREEN_HEIGHT = 800
-SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 1200
+SCREEN_WIDTH = 1200
 NUM_OF_ROWS = 8
 NUM_OF_COLS = 8
 BACKGROUND_COLOR = (168, 168, 168)
@@ -7,6 +7,7 @@ COLORS = {
      'WHITE': (0, 0, 0)
     ,'BLACK': (0, 0, 0)
     ,'GREY' : (128, 128, 128)
+    ,'GOLD' : (255, 201, 14)
     }
 PAWN_HEIGHT_SCALE = 0.0625
 PAWN_WIDTH_SCALE = 0.075
@@ -28,12 +29,12 @@ BIG_PIECE_IMAGE_SIZE = (SCREEN_HEIGHT * BIG_PIECE_HEIGHT_SCALE, SCREEN_WIDTH * B
 DOT_IMAGE_SIZE = (SCREEN_HEIGHT * DOT_SCALE, SCREEN_WIDTH * DOT_SCALE)
 STRIKED_DOT_IMAGE_SIZE = (SCREEN_HEIGHT * STRIKE_DOT_SCALE, SCREEN_WIDTH * STRIKE_DOT_SCALE)
 CASTLE_DOT_IMAGE_SIZE = (SCREEN_HEIGHT * CASTLE_DOT_SCALE, SCREEN_WIDTH * CASTLE_DOT_SCALE)
-END_SCREEN_IMAGE_SIZE = (SCREEN_HEIGHT, SCREEN_WIDTH)
-SKULL_IMAGE_SIZE = (400, 400)
+END_SCREEN_IMAGE_SIZE = ((SCREEN_HEIGHT / 2), (SCREEN_WIDTH / 2))
 #SKULL_IMAGE_SIZE = (SCREEN_HEIGHT / NUM_OF_COLS, SCREEN_WIDTH / NUM_OF_ROWS)
 
 END_SCREEN_TEXT_TOP = 200, 50, 400, 50
 END_SCREEN_TEXT_BOTTOM = 200, 650, 400, 50
+
 
 
 PLAYER_NAMES = ["Player1", "Player2"]
@@ -69,6 +70,8 @@ LONG = 1
 SHORT = 2
 FIRST = 1
 SECOND = 2
+WIDTH = 0
+HEIGHT = 1
 
 
 
@@ -89,6 +92,11 @@ TO_CHECK_WHITE_LONG_CASTLE_SQUARES = ["21", "31", "41"]
 TO_CHECK_WHITE_SHORT_CASTLE_SQUARES = ["61", "71"]
 TO_CHECK_BLACK_LONG_CASTLE_SQUARES = ["28", "38", "48"]
 TO_CHECK_BLACK_SHORT_CASTLE_SQUARES = ["68", "78"]
+
+NO_DECISION = 0
+PLAY_AGAIN = 1
+QUIT = 2
+
 
 
 ALL_PIECES = {
@@ -236,13 +244,13 @@ ASSETS = [
      "color": "WHITE"
     ,"name": "skull"
     ,"path": "yellow_skull.png"
-    ,"size": SKULL_IMAGE_SIZE
+    ,"size": END_SCREEN_IMAGE_SIZE
     },
     {
      "color": "BLACK"
     ,"name": "skull"
     ,"path": "red_skull.png"
-    ,"size": SKULL_IMAGE_SIZE
+    ,"size": END_SCREEN_IMAGE_SIZE
     },
     {
      "color": "WHITE"
@@ -279,6 +287,12 @@ ASSETS = [
     ,"name": "bell"
     ,"path": "red_bell.png"
     ,"size": CASTLE_DOT_IMAGE_SIZE
+    },
+    {
+     "color": ""
+    ,"name": "stalemate"
+    ,"path": "stalemate.png"
+    ,"size": END_SCREEN_IMAGE_SIZE
     }
 ]
 
