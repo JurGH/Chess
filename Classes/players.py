@@ -71,4 +71,30 @@ class Player():
     def add_score(self) -> None:
         self.score += 1
         return
+    
+    def change_color(self) -> None:
+        if self.color == c.PLAYER_COLORS[c.WHITE]:
+            self.color = c.PLAYER_COLORS[c.BLACK]
+        else:
+            self.color = c.PLAYER_COLORS[c.WHITE]
+
+    def reset_player(self) -> None:
+        self.change_color()
+        if self.color == c.PLAYER_COLORS[c.WHITE]:
+            self.on_turn = True
+            self.long_king_castle_square = c.WHITE_LONG_CASTLE_KING_SQUARE
+            self.long_rook_castle_square = c.WHITE_LONG_CASTLE_ROOK_SQUARE
+            self.to_check_long_castle_squares = c.TO_CHECK_WHITE_LONG_CASTLE_SQUARES
+            self.short_king_castle_square = c.WHITE_SHORT_CASTLE_KING_SQUARE
+            self.short_rook_castle_square = c.WHITE_SHORT_CASTLE_ROOK_SQUARE
+            self.to_check_short_castle_squares = c.TO_CHECK_WHITE_SHORT_CASTLE_SQUARES
+        else:
+            self.on_turn = False
+            self.long_king_castle_square = c.BLACK_LONG_CASTLE_KING_SQUARE
+            self.long_rook_castle_square = c.BLACK_LONG_CASTLE_ROOK_SQUARE
+            self.to_check_long_castle_squares = c.TO_CHECK_BLACK_LONG_CASTLE_SQUARES
+            self.short_king_castle_square = c.BLACK_SHORT_CASTLE_KING_SQUARE
+            self.short_rook_castle_square = c.BLACK_SHORT_CASTLE_ROOK_SQUARE
+            self.to_check_short_castle_squares = c.TO_CHECK_BLACK_SHORT_CASTLE_SQUARES
+        return
        
