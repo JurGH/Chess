@@ -9,10 +9,10 @@ import draw as d
 import os
 import time 
 
-def create_players() -> list[p.Player]:
+def create_players(player_names) -> list[p.Player]:
     all_players = []
-    all_players.append(p.Player(c.PLAYER_NAMES[0], c.PLAYER_COLORS[0]))
-    all_players.append(p.Player(c.PLAYER_NAMES[1], c.PLAYER_COLORS[1]))
+    all_players.append(p.Player(player_names[0], c.PLAYER_COLORS[0]))
+    all_players.append(p.Player(player_names[1], c.PLAYER_COLORS[1]))
     return all_players
 
 def create_pieces() -> list[pi.Piece]:
@@ -54,12 +54,66 @@ if __name__ == "__main__":
     clock = pygame.time.Clock()
 
     def main():
+        start_game = False
+        input_box = pygame.Rect(c.INPUT_BOX)
+        input_box_is_active = False
+        text_color = pygame.Color("black")
+        player_names = []
+        font = pygame.font.Font(None, 32)
+        player_name = ''
+
+        while not start_game:
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        pygame.quit()
+                
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if input_box.collidepoint(event.pos):
+                        input_box_is_active = True
+                    
+                if event.type == pygame.KEYDOWN:
+                    if input_box_is_active:
+                        if event.key == pygame.K_RETURN:
+                            player_names.append(player_name)
+                            player_name = ''
+                            input_box_is_active = False
+                        elif event.key == pygame.K_BACKSPACE:
+                            player_name = player_name[:-1]
+                        else:
+                            if len(player_name) >= 10:
+                                player_names.append(player_name)
+                                player_name = ''
+                                input_box_is_active = False
+                            else:
+                                player_name += event.unicode
+            
+            WIN.fill(c.BACKGROUND_COLOR)
+            txt_surface = font.render(player_name, True, text_color)
+            txt_surface_rect = txt_surface.get_rect()
+            txt_surface_rect.center = input_box.center         
+        
+            pygame.draw.rect(WIN, c.SQUARE_COLOR, input_box, 2)
+            WIN.blit(txt_surface, (txt_surface_rect))
+
+            pygame.display.update()
+            
+            # dat beginscherm moet een inputbalk tekenen
+            # na waarde in inputbalk succesvol (valide) sla naam op
+            # maak balk leeg voor player 2 naam
+            # sla op en start game
+
+
+
         # creating all game elements
         board = b.Board()
         all_players = create_players()
         all_pieces = create_pieces()
         castling = ca.Castling()
-
 
         # setting up game class with game elements stored
         game = g.Game(board, all_players, all_pieces, castling)
@@ -72,6 +126,7 @@ if __name__ == "__main__":
         draw.load_selected_piece_images(c.PIECE_IMAGES)
         draw.load_asset_images(c.ASSETS)
     # running the game
+
         run = True
         game_on = True
         while run:
@@ -138,23 +193,8 @@ if __name__ == "__main__":
                                 game.set_up_game()
                                 game_on = True
 
-                            
-
-
+                        
                 draw.draw_board(game, WIN)
-        # start een loop play_again ofzo, die loop heeft een eigen event loop die knop opnieuw spelen tekent
-        # als op de knop gedrukt wordt moet terug worden gegaan naar de main loop. 
-        # while True:
-        #     for event in pygame.event.get():
-        #         if event.type == pygame.QUIT:
-        #             pygame.quit()
 
-        #         if event.type == pygame.KEYDOWN:
-        #             if event.key == pygame.K_q:
-        #                 pygame.quit()
-        #     # draw.draw_checkmate(game, WIN)
-        #     draw.draw_board(game, WIN)
-            
-            # draw.draw_board(game.board.active_square_coordinates, board.occupied_squares, game.all_pieces, game.selected_piece, game.check, WIN)
 if __name__ == "__main__":
     main()
