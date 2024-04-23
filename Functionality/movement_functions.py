@@ -1,4 +1,4 @@
-import Functionality.constants as c
+import Functionality.constants as ca
 
 # should be called at initialization of piece, depending on the piece type
 def get_valid_straight_directions() -> list[tuple]:
@@ -146,15 +146,15 @@ def get_available_positions_in_line_movement(
     
     # first loop of current direction
     if to_check_column is None and to_check_row is None:
-        to_check_column = current_column + to_loop_direction[c.COLUMN_IDX]
-        to_check_row = current_row + to_loop_direction[c.ROW_IDX]
+        to_check_column = current_column + to_loop_direction[ca.COLUMN_IDX]
+        to_check_row = current_row + to_loop_direction[ca.ROW_IDX]
     # any loop after the first of current direction
     else:
-        to_check_column = to_check_column + to_loop_direction[c.COLUMN_IDX]
-        to_check_row = to_check_row + to_loop_direction[c.ROW_IDX]
+        to_check_column = to_check_column + to_loop_direction[ca.COLUMN_IDX]
+        to_check_row = to_check_row + to_loop_direction[ca.ROW_IDX]
 
     # checking if position is still within the board
-    if to_check_column not in c.BOARD_COLUMNS.keys() or to_check_row not in c.BOARD_ROWS:
+    if to_check_column not in ca.BOARD_COLUMNS.keys() or to_check_row not in ca.BOARD_ROWS:
         direction_loop_idx += 1
         # start next recursive case with edited values
         return get_available_positions_in_line_movement(
@@ -216,17 +216,17 @@ def get_available_regular_pawn_move_positions(
     available_positions: list[tuple]
     available_positions = []
     #index 0 is the only tuple in the list
-    to_check_column = current_column + valid_directions[0][c.COLUMN_IDX]
-    to_check_row = current_row + valid_directions[0][c.ROW_IDX]
+    to_check_column = current_column + valid_directions[0][ca.COLUMN_IDX]
+    to_check_row = current_row + valid_directions[0][ca.ROW_IDX]
 
-    if piece_color == "WHITE" and current_row == max(c.BOARD_ROWS):
+    if piece_color == "WHITE" and current_row == max(ca.BOARD_ROWS):
         print("Shouldn't happen, pawn should not exist on this square anymore")
         return []
-    elif piece_color == "BLACK" and current_row == min(c.BOARD_ROWS):
+    elif piece_color == "BLACK" and current_row == min(ca.BOARD_ROWS):
         print("Shouldn't happen, pawn should not exist on this square anymore")
         return []
     
-    if to_check_column not in c.BOARD_COLUMNS.keys() or to_check_row not in c.BOARD_ROWS:
+    if to_check_column not in ca.BOARD_COLUMNS.keys() or to_check_row not in ca.BOARD_ROWS:
         return
     else:
         square_occupied = check_if_square_occupied(to_check_column, to_check_row, piece_color, occupied_squares)
@@ -250,9 +250,9 @@ def get_available_pawn_striking_positions(
     available_positions: list[tuple]
     available_positions = []
     for valid_direction in valid_directions:
-        to_check_column = current_column + valid_direction[c.COLUMN_IDX]
-        to_check_row = current_row + valid_direction[c.ROW_IDX]
-        if to_check_column not in c.BOARD_COLUMNS.keys() or to_check_row not in c.BOARD_ROWS:
+        to_check_column = current_column + valid_direction[ca.COLUMN_IDX]
+        to_check_row = current_row + valid_direction[ca.ROW_IDX]
+        if to_check_column not in ca.BOARD_COLUMNS.keys() or to_check_row not in ca.BOARD_ROWS:
             continue
         else:
             square_occupied = check_if_square_occupied(to_check_column, to_check_row, piece_color, occupied_squares)
@@ -279,9 +279,9 @@ def get_available_single_movement_positions(
     available_positions: list[tuple]
     available_positions = []
     for valid_direction in valid_directions:
-        to_check_column = current_column + valid_direction[c.COLUMN_IDX]
-        to_check_row = current_row + valid_direction[c.ROW_IDX]
-        if to_check_column not in c.BOARD_COLUMNS.keys() or to_check_row not in c.BOARD_ROWS:
+        to_check_column = current_column + valid_direction[ca.COLUMN_IDX]
+        to_check_row = current_row + valid_direction[ca.ROW_IDX]
+        if to_check_column not in ca.BOARD_COLUMNS.keys() or to_check_row not in ca.BOARD_ROWS:
             continue
         else:
             square_occupied = check_if_square_occupied(to_check_column, to_check_row, piece_color, occupied_squares)
@@ -315,8 +315,8 @@ def check_if_square_occupied(
     for occ_square_dict in occupied_squares:
         occ_square_position = occ_square_dict["position"] 
         occ_square_color = occ_square_dict["color"]
-        occ_square_col = int(occ_square_position[c.COLUMN_IDX])
-        occ_square_row = int(occ_square_position[c.ROW_IDX])
+        occ_square_col = int(occ_square_position[ca.COLUMN_IDX])
+        occ_square_row = int(occ_square_position[ca.ROW_IDX])
 
         if occ_square_col == to_check_column and occ_square_row == to_check_row:
             if occ_square_color == piece_color:

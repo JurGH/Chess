@@ -1,6 +1,6 @@
 #import Functionality.constants as c
 import Functionality.check_evaluation as ce
-import Functionality.constants as c
+import Functionality.constants as ca
 
 class Castling():
     def __init__(self):
@@ -41,7 +41,7 @@ class Castling():
                 oc_pos = oc["position"]
                 if oc_pos == square:
                     return
-            square_possible = ce.evaluate_position(active_player.color, occupied_squares, c.CASTLE_EVAL, square)
+            square_possible = ce.evaluate_position(active_player.color, occupied_squares, ca.CASTLE_EVAL, square)
             if square_possible is False:
                 return
             else:
@@ -55,7 +55,7 @@ class Castling():
                 oc_pos = oc["position"]
                 if oc_pos == square:
                     return
-            square_possible = ce.evaluate_position(active_player.color, occupied_squares, c.CASTLE_EVAL, square)
+            square_possible = ce.evaluate_position(active_player.color, occupied_squares, ca.CASTLE_EVAL, square)
             if square_possible is False:
                 return
             else:

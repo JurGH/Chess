@@ -1,4 +1,4 @@
-import Functionality.constants as c
+import Functionality.constants as ca
 
 # color should be used when creating pieces, so only one function has to be written. 
 class Player():
@@ -18,22 +18,22 @@ class Player():
         self.active_pieces = []
         self.selected_piece = None
 
-        if color == c.PLAYER_COLORS[c.WHITE]:
+        if color == ca.PLAYER_COLORS[ca.WHITE]:
             self.on_turn = True
-            self.long_king_castle_square = c.WHITE_LONG_CASTLE_KING_SQUARE
-            self.long_rook_castle_square = c.WHITE_LONG_CASTLE_ROOK_SQUARE
-            self.to_check_long_castle_squares = c.TO_CHECK_WHITE_LONG_CASTLE_SQUARES
-            self.short_king_castle_square = c.WHITE_SHORT_CASTLE_KING_SQUARE
-            self.short_rook_castle_square = c.WHITE_SHORT_CASTLE_ROOK_SQUARE
-            self.to_check_short_castle_squares = c.TO_CHECK_WHITE_SHORT_CASTLE_SQUARES
+            self.long_king_castle_square = ca.WHITE_LONG_CASTLE_KING_SQUARE
+            self.long_rook_castle_square = ca.WHITE_LONG_CASTLE_ROOK_SQUARE
+            self.to_check_long_castle_squares = ca.TO_CHECK_WHITE_LONG_CASTLE_SQUARES
+            self.short_king_castle_square = ca.WHITE_SHORT_CASTLE_KING_SQUARE
+            self.short_rook_castle_square = ca.WHITE_SHORT_CASTLE_ROOK_SQUARE
+            self.to_check_short_castle_squares = ca.TO_CHECK_WHITE_SHORT_CASTLE_SQUARES
         else:
             self.on_turn = False
-            self.long_king_castle_square = c.BLACK_LONG_CASTLE_KING_SQUARE
-            self.long_rook_castle_square = c.BLACK_LONG_CASTLE_ROOK_SQUARE
-            self.to_check_long_castle_squares = c.TO_CHECK_BLACK_LONG_CASTLE_SQUARES
-            self.short_king_castle_square = c.BLACK_SHORT_CASTLE_KING_SQUARE
-            self.short_rook_castle_square = c.BLACK_SHORT_CASTLE_ROOK_SQUARE
-            self.to_check_short_castle_squares = c.TO_CHECK_BLACK_SHORT_CASTLE_SQUARES
+            self.long_king_castle_square = ca.BLACK_LONG_CASTLE_KING_SQUARE
+            self.long_rook_castle_square = ca.BLACK_LONG_CASTLE_ROOK_SQUARE
+            self.to_check_long_castle_squares = ca.TO_CHECK_BLACK_LONG_CASTLE_SQUARES
+            self.short_king_castle_square = ca.BLACK_SHORT_CASTLE_KING_SQUARE
+            self.short_rook_castle_square = ca.BLACK_SHORT_CASTLE_ROOK_SQUARE
+            self.to_check_short_castle_squares = ca.TO_CHECK_BLACK_SHORT_CASTLE_SQUARES
         return
 
     def set_active_pieces(self, pieces: list[object]) -> None:
@@ -73,28 +73,28 @@ class Player():
         return
     
     def change_color(self) -> None:
-        if self.color == c.PLAYER_COLORS[c.WHITE]:
-            self.color = c.PLAYER_COLORS[c.BLACK]
+        if self.color == ca.PLAYER_COLORS[ca.WHITE]:
+            self.color = ca.PLAYER_COLORS[ca.BLACK]
         else:
-            self.color = c.PLAYER_COLORS[c.WHITE]
+            self.color = ca.PLAYER_COLORS[ca.WHITE]
 
     def reset_player(self) -> None:
         self.change_color()
-        if self.color == c.PLAYER_COLORS[c.WHITE]:
+        if self.color == ca.PLAYER_COLORS[ca.WHITE]:
             self.on_turn = True
-            self.long_king_castle_square = c.WHITE_LONG_CASTLE_KING_SQUARE
-            self.long_rook_castle_square = c.WHITE_LONG_CASTLE_ROOK_SQUARE
-            self.to_check_long_castle_squares = c.TO_CHECK_WHITE_LONG_CASTLE_SQUARES
-            self.short_king_castle_square = c.WHITE_SHORT_CASTLE_KING_SQUARE
-            self.short_rook_castle_square = c.WHITE_SHORT_CASTLE_ROOK_SQUARE
-            self.to_check_short_castle_squares = c.TO_CHECK_WHITE_SHORT_CASTLE_SQUARES
+            self.long_king_castle_square = ca.WHITE_LONG_CASTLE_KING_SQUARE
+            self.long_rook_castle_square = ca.WHITE_LONG_CASTLE_ROOK_SQUARE
+            self.to_check_long_castle_squares = ca.TO_CHECK_WHITE_LONG_CASTLE_SQUARES
+            self.short_king_castle_square = ca.WHITE_SHORT_CASTLE_KING_SQUARE
+            self.short_rook_castle_square = ca.WHITE_SHORT_CASTLE_ROOK_SQUARE
+            self.to_check_short_castle_squares = ca.TO_CHECK_WHITE_SHORT_CASTLE_SQUARES
         else:
             self.on_turn = False
-            self.long_king_castle_square = c.BLACK_LONG_CASTLE_KING_SQUARE
-            self.long_rook_castle_square = c.BLACK_LONG_CASTLE_ROOK_SQUARE
-            self.to_check_long_castle_squares = c.TO_CHECK_BLACK_LONG_CASTLE_SQUARES
-            self.short_king_castle_square = c.BLACK_SHORT_CASTLE_KING_SQUARE
-            self.short_rook_castle_square = c.BLACK_SHORT_CASTLE_ROOK_SQUARE
-            self.to_check_short_castle_squares = c.TO_CHECK_BLACK_SHORT_CASTLE_SQUARES
+            self.long_king_castle_square = ca.BLACK_LONG_CASTLE_KING_SQUARE
+            self.long_rook_castle_square = ca.BLACK_LONG_CASTLE_ROOK_SQUARE
+            self.to_check_long_castle_squares = ca.TO_CHECK_BLACK_LONG_CASTLE_SQUARES
+            self.short_king_castle_square = ca.BLACK_SHORT_CASTLE_KING_SQUARE
+            self.short_rook_castle_square = ca.BLACK_SHORT_CASTLE_ROOK_SQUARE
+            self.to_check_short_castle_squares = ca.TO_CHECK_BLACK_SHORT_CASTLE_SQUARES
         return
        

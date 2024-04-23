@@ -1,6 +1,7 @@
 import pygame
 import os
 import Functionality.constants as c
+import create_assets as crea
 
 class Draw_board():
     
@@ -20,11 +21,6 @@ class Draw_board():
         self.quit_button_range_x = ()
         self.quit_button_range_y = ()
         
-
-    # With a unicode key the character of a chess piece is retrieved
-    # These characters are rendered as an image making use of the square coordinates
-    # To do: Selected pieces will be rendered differently, maybe bigger font, bold or highlighted
-    # textRect is x,y should be x,y,w,h size should be the entire square to centre & select
     def draw_pieces(self, square_coordinates: dict[str:tuple], pieces: list[object], win: object) -> None:
         for piece in pieces:
             piece_color_and_type = f"{piece.color}_{piece.type}".lower()
@@ -152,32 +148,33 @@ class Draw_board():
             self.draw_game_over(win, game, end_screen_image)
 
     def create_end_screen(self, game: object) -> dict[pygame.Rect]:
-        
         end_screen_dict = {}
-        
         if game.checkmate:
             top_text = f'{game.winning_player.name} has won'
-            
         if game.stalemate:
             top_text = "It's a draw"
 
-        
         top_text_size = self.font.size(top_text)
-        top_start_y = ((c.SCREEN_HEIGHT / 4) - top_text_size[c.HEIGHT])
-        top_start_x = ((c.SCREEN_WIDTH / 2) - (top_text_size[c.WIDTH] / 2))
+        left = ((c.SCREEN_WIDTH / 2) - (top_text_size[c.WIDTH] / 2))
+        top = ((c.SCREEN_HEIGHT / 4) - top_text_size[c.HEIGHT])
+        width = (top_text_size[c.WIDTH] * 1.05)
+        height = (top_text_size[c.HEIGHT] * 1.05)
+        all_top_screen_rects = crea.create_ret_with_text_centered(left, top, width, height, 
+                                                    top_text, self.font, c.COLORS['GOLD'])
+        
+        all_bottom_screen_rects = crea.create_rect_with_text_centered()
+
+
+
+        # drie boxes maken
+        top_text_size = self.font.size(top_text)
+
         top_text_box = self.font.render(top_text, True, c.COLORS["GOLD"])
         top_text_rect = top_text_box.get_rect()
-        top_rect = pygame.Rect(top_start_x, top_start_y,  top_text_size[c.WIDTH] * 1.05, top_text_size[c.HEIGHT] * 1.05)
+        top_rect = pygame.Rect(top_start_x, top_start_y)
         top_text_rect.center = top_rect.center
 
-        bottom_text = "Would you like to play again?"
-        bottom_text_size = self.font.size(bottom_text)
-        bottom_start_y = ((c.SCREEN_HEIGHT * 0.75) + bottom_text_size[c.HEIGHT])
-        bottom_start_x = ((c.SCREEN_WIDTH / 2) - (bottom_text_size[c.WIDTH] / 2))
-        bottom_text_box = self.font.render(bottom_text, True, c.COLORS["GOLD"])
-        bottom_text_rect = bottom_text_box.get_rect()
-        bottom_rect = pygame.Rect(bottom_start_x, bottom_start_y,  bottom_text_size[c.WIDTH] * 1.05, bottom_text_size[c.HEIGHT] * 1.05)
-        bottom_text_rect.center = bottom_rect.center
+
 
         play_again_text = "Play Again"
         play_again_size = bottom_rect.size
@@ -245,12 +242,12 @@ class Draw_board():
         win.blit(end_screen_dict["play_again_text_box"], end_screen_dict["play_again_text_rect"])
         pygame.draw.rect(win, 'black', end_screen_dict["quit_rect"], 0, 6, 6, 6, 6)
         win.blit(end_screen_dict["quit_text_box"], end_screen_dict["quit_text_rect"])
-        end_screen_y = ((c.SCREEN_HEIGHT / 2) - (c.END_SCREEN_IMAGE_SIZE[c.HEIGHT]/2))
-        end_screen_x= ((c.SCREEN_WIDTH / 2) - (c.END_SCREEN_IMAGE_SIZE[c.WIDTH]/2))
+        end_screen_y = ((c.SCREEN_HEIGHT / 2) - (crea.END_SCREEN_IMAGE_SIZE[c.HEIGHT]/2))
+        end_screen_x= ((c.SCREEN_WIDTH / 2) - (crea.END_SCREEN_IMAGE_SIZE[c.WIDTH]/2))
         win.blit(end_screen_image, (end_screen_y, end_screen_x))
 
 
-    def load_piece_images(self, pieces_image_data: c.PIECE_IMAGES):
+    def load_piece_images(self, pieces_image_data: crea.PIECE_IMAGES):
         for piece in pieces_image_data:
             piece_name = piece["name"]
             piece_normal_path = piece["normal_path"]
@@ -261,7 +258,7 @@ class Draw_board():
             self.piece_image_info.append({"name": piece_name, "image": piece_image, "size": piece_size})
         return
     
-    def load_selected_piece_images(self, pieces_image_data: c.PIECE_IMAGES):
+    def load_selected_piece_images(self, pieces_image_data: crea.PIECE_IMAGES):
         for piece in pieces_image_data:
             piece_name = piece["name"]
             piece_selected_path = piece["selected_path"]
@@ -272,7 +269,7 @@ class Draw_board():
             self.piece_selected_image_info.append({"name": piece_name, "image": piece_image, "size": piece_size})
         return
     
-    def load_asset_images(self, assets: c.ASSETS) -> None:
+    def load_asset_images(self, assets: crea.ASSET_IMGS) -> None:
         for asset in assets: 
             asset_color = asset["color"]
             asset_name = asset["name"]

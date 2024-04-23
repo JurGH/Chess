@@ -1,4 +1,4 @@
-import Functionality.constants as c
+import Functionality.constants as ca
 import Functionality.movement_functions as mf
 import Functionality.check_evaluation as ce
 
@@ -55,7 +55,7 @@ class Rook(Piece):
         self.color = color
         self.type = "rook"
         try:
-            if int(self.position[c.COLUMN_IDX]) == 1:
+            if int(self.position[ca.COLUMN_IDX]) == 1:
                 self.castle_type = "long"
             else:
                 self.castle_type = "short"
@@ -66,7 +66,7 @@ class Rook(Piece):
         self.selectable = False
         self.selected = False
         self.valid_directions = mf.get_valid_straight_directions()
-        self.castle_dest_square = c.ROOK_CASTLE_SQUARES[self.position]
+        self.castle_dest_square = ca.ROOK_CASTLE_SQUARES[self.position]
 
     def get_available_positions(self, occupied_squares: dict[str:str, str:str, str:str]) -> None:
         self.available_positions = []
@@ -91,8 +91,8 @@ class Rook(Piece):
         return
 
     def set_eval_position(self, eval_position) -> None:
-        eval_position_column = str(eval_position[c.COLUMN_IDX])
-        eval_position_row = str(eval_position[c.ROW_IDX])
+        eval_position_column = str(eval_position[ca.COLUMN_IDX])
+        eval_position_row = str(eval_position[ca.ROW_IDX])
         self.eval_position = eval_position_column + eval_position_row
         return
     
@@ -155,8 +155,8 @@ class Knight(Piece):
         return
 
     def set_eval_position(self, eval_position) -> None:
-        eval_position_column = str(eval_position[c.COLUMN_IDX])
-        eval_position_row = str(eval_position[c.ROW_IDX])
+        eval_position_column = str(eval_position[ca.COLUMN_IDX])
+        eval_position_row = str(eval_position[ca.ROW_IDX])
         self.eval_position = eval_position_column + eval_position_row
         return
     
@@ -217,8 +217,8 @@ class Bishop(Piece):
         return
 
     def set_eval_position(self, eval_position) -> None:
-        eval_position_column = str(eval_position[c.COLUMN_IDX])
-        eval_position_row = str(eval_position[c.ROW_IDX])
+        eval_position_column = str(eval_position[ca.COLUMN_IDX])
+        eval_position_row = str(eval_position[ca.ROW_IDX])
         self.eval_position = eval_position_column + eval_position_row
         return
     
@@ -290,8 +290,8 @@ class Queen(Piece):
         return
 
     def set_eval_position(self, eval_position) -> None:
-        eval_position_column = str(eval_position[c.COLUMN_IDX])
-        eval_position_row = str(eval_position[c.ROW_IDX])
+        eval_position_column = str(eval_position[ca.COLUMN_IDX])
+        eval_position_row = str(eval_position[ca.ROW_IDX])
         self.eval_position = eval_position_column + eval_position_row
         return
     
@@ -332,10 +332,10 @@ class King(Piece):
         self.selectable = False
         self.selected = False
         self.valid_directions = mf.get_valid_king_directions()
-        self.long_castle_dest_square = c.KING_LONG_CASTLE_SQUARES[self.position]
-        self.short_castle_dest_square = c.KING_SHORT_CASTLE_SQUARES[self.position]
-        self.to_check_long_castle_squares = c.TO_CHECK_LONG_CASTLE_POSITIONS[self.position]
-        self.to_check_short_castle_squares = c.TO_CHECK_SHORT_CASTLE_POSITIONS[self.position]
+        self.long_castle_dest_square = ca.KING_LONG_CASTLE_SQUARES[self.position]
+        self.short_castle_dest_square = ca.KING_SHORT_CASTLE_SQUARES[self.position]
+        self.to_check_long_castle_squares = ca.TO_CHECK_LONG_CASTLE_POSITIONS[self.position]
+        self.to_check_short_castle_squares = ca.TO_CHECK_SHORT_CASTLE_POSITIONS[self.position]
 
     def get_available_positions(self, occupied_squares: dict[str:str, str:str, str:str]) -> None:
         current_column = int(self.position[0])
@@ -359,8 +359,8 @@ class King(Piece):
         return
     
     def set_eval_position(self, eval_position) -> None:
-        eval_position_column = str(eval_position[c.COLUMN_IDX])
-        eval_position_row = str(eval_position[c.ROW_IDX])
+        eval_position_column = str(eval_position[ca.COLUMN_IDX])
+        eval_position_row = str(eval_position[ca.ROW_IDX])
         self.eval_position = eval_position_column + eval_position_row
         return
     
@@ -449,8 +449,8 @@ class Pawn(Piece):
         return
 
     def set_eval_position(self, eval_position) -> None:
-        eval_position_column = str(eval_position[c.COLUMN_IDX])
-        eval_position_row = str(eval_position[c.ROW_IDX])
+        eval_position_column = str(eval_position[ca.COLUMN_IDX])
+        eval_position_row = str(eval_position[ca.ROW_IDX])
         self.eval_position = eval_position_column + eval_position_row
         return
     
@@ -475,9 +475,9 @@ class Pawn(Piece):
         return
        
     def move_piece(self, position: str) -> None:
-        if self.color == "WHITE" and int(position[c.ROW_IDX]) == max(c.BOARD_ROWS):
+        if self.color == "WHITE" and int(position[ca.ROW_IDX]) == max(ca.BOARD_ROWS):
             self.promote_pawn("queen")
-        elif self.color == "BLACK" and int(position[c.ROW_IDX]) == min(c.BOARD_ROWS):
+        elif self.color == "BLACK" and int(position[ca.ROW_IDX]) == min(ca.BOARD_ROWS):
             self.promote_pawn("queen")
         self.position = position
         self.turn_counter += 1

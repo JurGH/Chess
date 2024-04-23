@@ -1,4 +1,4 @@
-import Functionality.constants as c
+import Functionality.constants as ca
 import Functionality.movement_functions as mf
 
 def evaluate_line_movement(
@@ -29,14 +29,14 @@ def evaluate_line_movement(
     
     to_check_direction = valid_directions[direction_loop_idx]
     if to_check_column is None and to_check_row is None:
-        to_check_column = current_column + to_check_direction[c.COLUMN_IDX]
-        to_check_row = current_row + to_check_direction[c.ROW_IDX]
+        to_check_column = current_column + to_check_direction[ca.COLUMN_IDX]
+        to_check_row = current_row + to_check_direction[ca.ROW_IDX]
     else:
-        to_check_column = to_check_column + to_check_direction[c.COLUMN_IDX]
-        to_check_row = to_check_row + to_check_direction[c.ROW_IDX]
+        to_check_column = to_check_column + to_check_direction[ca.COLUMN_IDX]
+        to_check_row = to_check_row + to_check_direction[ca.ROW_IDX]
 
     # not within board range, moving on to next direction loop
-    if to_check_column not in c.BOARD_COLUMNS.keys() or to_check_row not in c.BOARD_ROWS:
+    if to_check_column not in ca.BOARD_COLUMNS.keys() or to_check_row not in ca.BOARD_ROWS:
         direction_loop_idx += 1
         # resetting for next direction loop
         to_check_column = None
@@ -103,9 +103,9 @@ def evaluate_single_movement(
     for valid_direction in valid_directions:
         to_check_column = None
         to_check_row = None
-        to_check_column = current_column + valid_direction[c.COLUMN_IDX]
-        to_check_row = current_row + valid_direction[c.ROW_IDX]
-        if to_check_column not in c.BOARD_COLUMNS.keys() or to_check_row not in c.BOARD_ROWS:
+        to_check_column = current_column + valid_direction[ca.COLUMN_IDX]
+        to_check_row = current_row + valid_direction[ca.ROW_IDX]
+        if to_check_column not in ca.BOARD_COLUMNS.keys() or to_check_row not in ca.BOARD_ROWS:
             continue
         else:
             square_occupied_by_opponent_king_or_knight = \
@@ -150,7 +150,7 @@ def evaluate_pawn_movement(
         else:
             raise Exception("piece_color neither black or white, should never happen")
          
-        if to_check_column not in c.BOARD_COLUMNS.keys() or to_check_row not in c.BOARD_ROWS:
+        if to_check_column not in ca.BOARD_COLUMNS.keys() or to_check_row not in ca.BOARD_ROWS:
             continue
         else:
             square_occupied_by_opponent_pawn = \
@@ -181,8 +181,8 @@ def check_if_square_occupied(
         occ_square_position = occ_square_dict["position"] 
         occ_square_color = occ_square_dict["color"]
         occ_square_type = occ_square_dict["type"]
-        occ_square_col = int(occ_square_position[c.COLUMN_IDX])
-        occ_square_row = int(occ_square_position[c.ROW_IDX])
+        occ_square_col = int(occ_square_position[ca.COLUMN_IDX])
+        occ_square_row = int(occ_square_position[ca.ROW_IDX])
 
         if occ_square_col == to_check_column and occ_square_row == to_check_row:
             if occ_square_color == piece_color:
@@ -195,8 +195,8 @@ def check_if_square_occupied(
         occ_square_position = occ_square_dict["position"] 
         occ_square_color = occ_square_dict["color"]
         occ_square_type = occ_square_dict["type"]
-        occ_square_col = int(occ_square_position[c.COLUMN_IDX])
-        occ_square_row = int(occ_square_position[c.ROW_IDX])
+        occ_square_col = int(occ_square_position[ca.COLUMN_IDX])
+        occ_square_row = int(occ_square_position[ca.ROW_IDX])
         # check if current square is in occupied squares
         if occ_square_col == to_check_column and occ_square_row == to_check_row:
             # found occupied square, checking for opponent pieces
@@ -219,23 +219,23 @@ def check_if_square_occupied(
 def evaluate_position(
         piece_color: str, 
         eval_occupied_squares: dict[str:str, str:str, str:str],
-        position_eval_type = c.CHECK_EVAL,
+        position_eval_type = ca.CHECK_EVAL,
         to_check_square = None):
-    if position_eval_type == c.CHECK_EVAL:
+    if position_eval_type == ca.CHECK_EVAL:
         for idx, occupied_square in enumerate(eval_occupied_squares):
             try:
                 # retrieve king position on eval_board
                 if occupied_square["type"] == "king" and occupied_square["color"] == piece_color:
                     king_square = eval_occupied_squares[idx]
                     king_position = king_square["position"]
-                    king_position_column = int(king_position[c.COLUMN_IDX])
-                    king_position_row = int(king_position[c.ROW_IDX])
+                    king_position_column = int(king_position[ca.COLUMN_IDX])
+                    king_position_row = int(king_position[ca.ROW_IDX])
             except UnboundLocalError as e:
                 print(f"you beat the developer, king removed from board shown by this error: {e}")
     else:
         king_position = to_check_square
-        king_position_column = int(king_position[c.COLUMN_IDX])
-        king_position_row = int(king_position[c.ROW_IDX])
+        king_position_column = int(king_position[ca.COLUMN_IDX])
+        king_position_row = int(king_position[ca.ROW_IDX])
     # From king position go to squares in all possible directions and check for occupation on squares
     # If occupied by opponent piece and it can strike king based on the striking move set of that piece:
     # position is not valid

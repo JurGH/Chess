@@ -1,4 +1,4 @@
-import Functionality.constants as c
+import Functionality.constants as ca
 import Functionality.movement_functions as mf
 
 """
@@ -17,7 +17,7 @@ class Board():
         self.square_coordinates: dict[str: tuple] # "A1" : (x,y,w,h)
         self.occupied_squares = []
         self.eval_occupied_squares = []
-        self.active_color_view = c.WHITE
+        self.active_color_view = ca.WHITE
         # should be evaluated if white or black player view should be applied. For now hard coded to white
         self.active_square_coordinates = self.get_square_coordinates_white_bottom()
         self.square_coordinates_white_bottom = self.get_square_coordinates_white_bottom()
@@ -45,32 +45,32 @@ class Board():
 
     def get_square_coordinates_white_bottom(self) -> None:
         square_coordinates_white_bottom = {}
-        for row in c.BOARD_ROWS:
-            y = ((max(c.BOARD_ROWS) - 1) * c.SQUARE_HEIGHT) - ((row - 1) * c.SQUARE_HEIGHT)
+        for row in ca.BOARD_ROWS:
+            y = ((max(ca.BOARD_ROWS) - 1) * ca.SQUARE_HEIGHT) - ((row - 1) * ca.SQUARE_HEIGHT)
             i = 0
-            for index, col in enumerate(c.BOARD_COLUMNS.keys()):
-                x = ((index) * c.SQUARE_WIDTH)
+            for index, col in enumerate(ca.BOARD_COLUMNS.keys()):
+                x = ((index) * ca.SQUARE_WIDTH)
                 i += 1
-                square_coordinates_white_bottom.update({str(col) + str(row) : (x, y, c.SQUARE_WIDTH, c.SQUARE_HEIGHT)})
+                square_coordinates_white_bottom.update({str(col) + str(row) : (x, y, ca.SQUARE_WIDTH, ca.SQUARE_HEIGHT)})
         return square_coordinates_white_bottom
     
     def get_square_coordinates_black_bottom(self) -> None:
         square_coordinates_black_bottom = {}
-        for row in c.BOARD_ROWS:
-            y = ((row - 1) * c.SQUARE_HEIGHT)
+        for row in ca.BOARD_ROWS:
+            y = ((row - 1) * ca.SQUARE_HEIGHT)
             i = 0
-            for index, col in enumerate(c.BOARD_COLUMNS.keys()):
-                x = ((max(c.BOARD_COLUMNS) -1) * c.SQUARE_WIDTH) - ((index) * c.SQUARE_WIDTH)
+            for index, col in enumerate(ca.BOARD_COLUMNS.keys()):
+                x = ((max(ca.BOARD_COLUMNS) -1) * ca.SQUARE_WIDTH) - ((index) * ca.SQUARE_WIDTH)
                 i += 1
-                square_coordinates_black_bottom.update({str(col) + str(row) : (x, y, c.SQUARE_WIDTH, c.SQUARE_HEIGHT)})
+                square_coordinates_black_bottom.update({str(col) + str(row) : (x, y, ca.SQUARE_WIDTH, ca.SQUARE_HEIGHT)})
         return square_coordinates_black_bottom
   
     def toggle_square_coordinates(self) -> None:
         self.active_square_coordinates = {}
-        if self.active_color_view == c.WHITE:
-            self.active_color_view = c.BLACK
+        if self.active_color_view == ca.WHITE:
+            self.active_color_view = ca.BLACK
             self.active_square_coordinates = self.square_coordinates_black_bottom
         else:
-            self.active_color_view = c.WHITE
+            self.active_color_view = ca.WHITE
             self.active_square_coordinates = self.square_coordinates_white_bottom
         return

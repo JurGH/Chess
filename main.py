@@ -5,6 +5,7 @@ import Functionality.constants as c
 import Classes.players as p
 import Classes.pieces as pi
 import Classes.castle as ca
+import create_assets as crea
 import draw as d
 import os
 import time 
@@ -42,7 +43,6 @@ if __name__ == "__main__":
     error_sound.set_volume(0.2)
     castling_sound = pygame.mixer.Sound(castled_sound_path)
 
-
     sound_library = {
          c.PIECE_MOVED: move_piece_sound
         ,c.STRIKED: strike_piece_sound
@@ -58,7 +58,7 @@ if __name__ == "__main__":
         input_box = pygame.Rect(c.INPUT_BOX)
         input_box_is_active = False
         text_color = pygame.Color("black")
-        player_names = []
+        player_names = ["", ""]
         font = pygame.font.Font(None, 32)
         player_name = ''
 
@@ -79,26 +79,46 @@ if __name__ == "__main__":
                 if event.type == pygame.KEYDOWN:
                     if input_box_is_active:
                         if event.key == pygame.K_RETURN:
-                            player_names.append(player_name)
+                            player_names.insert(0, player_name)
                             player_name = ''
                             input_box_is_active = False
                         elif event.key == pygame.K_BACKSPACE:
                             player_name = player_name[:-1]
                         else:
                             if len(player_name) >= 10:
-                                player_names.append(player_name)
-                                player_name = ''
-                                input_box_is_active = False
+                                pass
                             else:
                                 player_name += event.unicode
-            
+            """
+            These surfaces are for the input of player names
+            """
             WIN.fill(c.BACKGROUND_COLOR)
             txt_surface = font.render(player_name, True, text_color)
             txt_surface_rect = txt_surface.get_rect()
-            txt_surface_rect.center = input_box.center         
+            txt_surface_rect.center = input_box.center
+
+            """
+            These surfaces are for the entered player names
+            """
+            player_1_text = f'Player 1 Name: {player_names[0]}'
+            player_1_surface = font.render(player_1_text, True, text_color)
+            player_1_surface_rect = player_1_surface.get_rect()
+            player_1_box = pygame.Rect(c.PLAYER_NAME_BOX)
+            win_rect = WIN.get_rect()
+            player_1_surface_rect.center = player_1_box.center
+            
+            """"
+            2 functies benodigd: Create Rect en Draw Rect
+            create rect: Obv Dictionairy in Constants, laden in de draw class
+            Draw kenmerk meegeven, 1 = draw, 0 = niet draw
+            Draw Rect: Door gelade dictionairy heen lopen en alles drawen
+            """
+                     
         
             pygame.draw.rect(WIN, c.SQUARE_COLOR, input_box, 2)
+            pygame.draw.rect(WIN, c.SQUARE_COLOR, player_1_box, 2)
             WIN.blit(txt_surface, (txt_surface_rect))
+            WIN.blit(player_1_surface, (player_1_surface_rect))
 
             pygame.display.update()
             
@@ -106,7 +126,6 @@ if __name__ == "__main__":
             # na waarde in inputbalk succesvol (valide) sla naam op
             # maak balk leeg voor player 2 naam
             # sla op en start game
-
 
 
         # creating all game elements
@@ -122,9 +141,9 @@ if __name__ == "__main__":
         game.set_up_game()
         # creating draw class to display all game elements to pygame client
         draw = d.Draw_board()
-        draw.load_piece_images(c.PIECE_IMAGES)
-        draw.load_selected_piece_images(c.PIECE_IMAGES)
-        draw.load_asset_images(c.ASSETS)
+        draw.load_piece_images(crea.PIECE_IMAGES)
+        draw.load_selected_piece_images(crea.PIECE_IMAGES)
+        draw.load_asset_images(crea.ASSETS)
     # running the game
 
         run = True
@@ -198,3 +217,4 @@ if __name__ == "__main__":
 
 if __name__ == "__main__":
     main()
+
