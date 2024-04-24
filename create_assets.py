@@ -1,4 +1,3 @@
-import pygame
 import Functionality.constants as c
 
 PAWN_HEIGHT_SCALE = 0.0625
@@ -22,7 +21,20 @@ DOT_IMAGE_SIZE = (c.SCREEN_HEIGHT * DOT_SCALE, c.SCREEN_WIDTH * DOT_SCALE)
 STRIKED_DOT_IMAGE_SIZE = (c.SCREEN_HEIGHT * STRIKE_DOT_SCALE, c.SCREEN_WIDTH * STRIKE_DOT_SCALE)
 CASTLE_DOT_IMAGE_SIZE = (c.SCREEN_HEIGHT * CASTLE_DOT_SCALE, c.SCREEN_WIDTH * CASTLE_DOT_SCALE)
 END_SCREEN_IMAGE_SIZE = ((c.SCREEN_HEIGHT / 2), (c.SCREEN_WIDTH / 2))
-#SKULL_IMAGE_SIZE = (c.SCREEN_HEIGHT / NUM_OF_COLS, c.SCREEN_WIDTH / NUM_OF_ROWS)
+SKULL_IMAGE_SIZE = (c.SCREEN_HEIGHT / c.NUM_OF_COLS, c.SCREEN_WIDTH / c.NUM_OF_ROWS)
+
+END_SCREEN_TEXT_TOP = 200, 50, 400, 50 
+END_SCREEN_TEXT_BOTTOM = 200, 650, 400, 50
+
+INPUT_BOX = round((c.SCREEN_WIDTH / 2) - ((c.SCREEN_WIDTH * 0.8) / 2))\
+            ,round((c.SCREEN_HEIGHT / 2) -((c.SCREEN_HEIGHT * 0.2) / 2))\
+            ,c.SCREEN_WIDTH * 0.8\
+            ,c.SCREEN_HEIGHT * 0.2
+PLAYER_NAME_BOX = round((c.SCREEN_WIDTH / 2) - ((c.SCREEN_WIDTH * 0.8) / 2))\
+            ,round(c.SCREEN_HEIGHT - (c.SCREEN_HEIGHT * 0.2)) \
+            ,c.SCREEN_WIDTH * 0.4\
+            ,c.SCREEN_HEIGHT * 0.1
+
 
 PIECE_IMAGES = [
     {
@@ -156,64 +168,4 @@ ASSET_IMGS = [
     }
 ]
 
-bottom_text = 
-play_again_text = "Play again"
-quit_text = "Quit"
-bottom_text_size = self.font.size(bottom_text)
-bottom_start_y = ((c.SCREEN_HEIGHT * 0.75) + bottom_text_size[c.HEIGHT])
-bottom_start_x = ((c.SCREEN_WIDTH / 2) - (bottom_text_size[c.WIDTH] / 2))
-bottom_text_box = self.font.render(bottom_text, True, c.COLORS["GOLD"])
-bottom_text_rect = bottom_text_box.get_rect()
-bottom_rect = pygame.Rect(bottom_start_x, bottom_start_y,  bottom_text_size[c.WIDTH] * 1.05, bottom_text_size[c.HEIGHT] * 1.05)
-bottom_text_rect.center = bottom_rect.center
 
-TOP_TEXT_FORMULAS = ()
-
-
-END_SCREEN_ASSETS = [
-    {
-        "asset_location": "TOP", 
-        "text": "", 
-        "multipliers": [0,5, 0,5]
-    },
-    {
-        "asset_location": "BOTTOM", 
-        "text":"Would you like to play again?", 
-        "multipliers": [0,75, 1, 0,5, 0,5], 
-        "color": c.COLORS["GOLD"]
-    }, 
-    {
-        "asset_location": "PLAY_AGAIN", 
-        "text":"Play again", 
-        "multipliers": [0,75, 1, 0,5, 0,5], 
-        "color": c.COLORS["GOLD"]
-    }
-
-BOTTOM = {"text":"Would you like to play again?", 
-          "multipliers": [0,75, 1, 0,5, 0,5], 
-          "color": c.COLORS["GOLD"]}
-
-PLAY_AGAIN = {}
-
-QUIT = {}
-
-PLAYER_1 = {}
-
-PLAYER_2 = {}
-
-
-def create_rect_with_text_centered(left: float, top: float, width: float,
-                                    height: float, text: str, font: object, color: str):
-    text_box = font.render(text, True, color)
-    text_rect = text_box.get_rect()
-    rect_for_text = pygame.Rect(left, top, width, height)
-    text_rect.center = rect_for_text.center
-    return {"text_box": text_box, "text_rect": text_rect, "rect_for_text": rect_for_text}
-
-
-def create_positions_for_rect(text, font):
-    text_size = font.size(text)
-    
-    top = 
-
-    if 

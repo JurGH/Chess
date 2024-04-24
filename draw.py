@@ -2,6 +2,8 @@ import pygame
 import os
 import Functionality.constants as c
 import create_assets as crea
+import Functionality.end_screen as es
+import Functionality.start_screen as ssc
 
 class Draw_board():
     
@@ -15,7 +17,7 @@ class Draw_board():
         self.current_directory = os.path.dirname(__file__)
         self.assets_directory = os.path.join(self.current_directory, "Assets")
         self.assets_directory_2 = os.path.join(self.assets_directory, "img\\")
-        self.font = pygame.font.Font(None,round(c.SCREEN_HEIGHT * c.FONT_SCALE))
+        self.font = pygame.font.Font(None,round(c.SCREEN_HEIGHT * crea.FONT_SCALE))
         self.play_again_button_range_x = ()
         self.play_again_button_range_y = ()
         self.quit_button_range_x = ()
@@ -78,14 +80,14 @@ class Draw_board():
         for available_position in selected_piece.available_positions:
             position_str = str(available_position[0]) + str(available_position[1])
             if position_str in all_occupied_squares:
-                piece_x_coordinate = (active_square_coordinates[position_str][c.COLUMN_IDX] - c.STRIKED_DOT_IMAGE_SIZE[0] / 2) + (c.SQUARE_HEIGHT / 2)
-                piece_y_coordinate = (active_square_coordinates[position_str][c.ROW_IDX] - c.STRIKED_DOT_IMAGE_SIZE[1] / 2) + (c.SQUARE_WIDTH / 2)
+                piece_x_coordinate = (active_square_coordinates[position_str][c.COLUMN_IDX] - crea.STRIKED_DOT_IMAGE_SIZE[0] / 2) + (c.SQUARE_HEIGHT / 2)
+                piece_y_coordinate = (active_square_coordinates[position_str][c.ROW_IDX] - crea.STRIKED_DOT_IMAGE_SIZE[1] / 2) + (c.SQUARE_WIDTH / 2)
                 piece_coordinates = (piece_x_coordinate, piece_y_coordinate)
                 the_image = strike_image
 
             else:
-                piece_x_coordinate = (active_square_coordinates[position_str][c.COLUMN_IDX] - c.DOT_IMAGE_SIZE[0] / 2) + (c.SQUARE_HEIGHT / 2)
-                piece_y_coordinate = (active_square_coordinates[position_str][c.ROW_IDX] - c.DOT_IMAGE_SIZE[1] / 2) + (c.SQUARE_WIDTH / 2)
+                piece_x_coordinate = (active_square_coordinates[position_str][c.COLUMN_IDX] - crea.DOT_IMAGE_SIZE[0] / 2) + (c.SQUARE_HEIGHT / 2)
+                piece_y_coordinate = (active_square_coordinates[position_str][c.ROW_IDX] - crea.DOT_IMAGE_SIZE[1] / 2) + (c.SQUARE_WIDTH / 2)
                 piece_coordinates = (piece_x_coordinate, piece_y_coordinate)
                 the_image = dot_image
             
@@ -100,8 +102,8 @@ class Draw_board():
                 else:
                     pass
 
-        piece_x_coordinate = (square_coordinates[castle_square][c.COLUMN_IDX] - c.CASTLE_DOT_IMAGE_SIZE[0] / 2) + (c.SQUARE_HEIGHT / 2)
-        piece_y_coordinate = (square_coordinates[castle_square][c.ROW_IDX] - c.CASTLE_DOT_IMAGE_SIZE[1] / 2) + (c.SQUARE_WIDTH / 2)
+        piece_x_coordinate = (square_coordinates[castle_square][c.COLUMN_IDX] - crea.CASTLE_DOT_IMAGE_SIZE[0] / 2) + (c.SQUARE_HEIGHT / 2)
+        piece_y_coordinate = (square_coordinates[castle_square][c.ROW_IDX] - crea.CASTLE_DOT_IMAGE_SIZE[1] / 2) + (c.SQUARE_WIDTH / 2)
         piece_coordinates = (piece_x_coordinate, piece_y_coordinate)
         
         win.blit(castle_image, piece_coordinates)
@@ -146,72 +148,40 @@ class Draw_board():
                     pass
 
             self.draw_game_over(win, game, end_screen_image)
-
-    def create_end_screen(self, game: object) -> dict[pygame.Rect]:
-        end_screen_dict = {}
-        if game.checkmate:
-            top_text = f'{game.winning_player.name} has won'
-        if game.stalemate:
-            top_text = "It's a draw"
-
-        top_text_size = self.font.size(top_text)
-        left = ((c.SCREEN_WIDTH / 2) - (top_text_size[c.WIDTH] / 2))
-        top = ((c.SCREEN_HEIGHT / 4) - top_text_size[c.HEIGHT])
-        width = (top_text_size[c.WIDTH] * 1.05)
-        height = (top_text_size[c.HEIGHT] * 1.05)
-        all_top_screen_rects = crea.create_ret_with_text_centered(left, top, width, height, 
-                                                    top_text, self.font, c.COLORS['GOLD'])
-        
-        all_bottom_screen_rects = crea.create_rect_with_text_centered()
-
-
-
-        # drie boxes maken
-        top_text_size = self.font.size(top_text)
-
-        top_text_box = self.font.render(top_text, True, c.COLORS["GOLD"])
-        top_text_rect = top_text_box.get_rect()
-        top_rect = pygame.Rect(top_start_x, top_start_y)
-        top_text_rect.center = top_rect.center
-
-
-
-        play_again_text = "Play Again"
-        play_again_size = bottom_rect.size
-        play_again_width = play_again_size[0] / 2
-        play_again_start_y = (bottom_rect[1] + bottom_rect[3])
-        play_again_start_x = bottom_start_x
-        play_again_text_box = self.font.render(play_again_text, True, "green")
-        play_again_text_rect = play_again_text_box.get_rect()
-        play_again_rect = pygame.Rect(play_again_start_x, play_again_start_y, play_again_width, play_again_size[c.HEIGHT])
-        play_again_text_rect.center = play_again_rect.center
-
-        quit_text = "Quit"
-        quit_size = bottom_rect.size
-        quit_width = quit_size[0] / 2
-        quit_start_y = (bottom_rect[1] + bottom_rect[3])
-        quit_start_x = bottom_start_x + play_again_width
-        quit_text_box = self.font.render(quit_text, True, "red")
-        quit_text_rect = quit_text_box.get_rect()
-        quit_rect = pygame.Rect(quit_start_x, quit_start_y, quit_width, quit_size[c.HEIGHT])
-        quit_text_rect.center = quit_rect.center
-
-        end_screen_dict.update({"top_text_box": top_text_box
-                                ,"top_text_rect": top_text_rect
-                                ,"top_rect": top_rect
-                                ,"bottom_text_box": bottom_text_box
-                                ,"bottom_text_rect": bottom_text_rect
-                                ,"bottom_rect": bottom_rect
-                                ,"play_again_text_box": play_again_text_box
-                                ,"play_again_text_rect": play_again_text_rect
-                                ,"play_again_rect": play_again_rect
-                                ,"quit_text_box": quit_text_box
-                                ,"quit_text_rect": quit_text_rect
-                                ,"quit_rect": quit_rect
-                                })
-        
-        return end_screen_dict
     
+    def draw_start_screen(self, win: object, player_name: str):
+        input_box_info = ssc.create_start_input_box(self.font, player_name)
+        input_box = input_box_info[0]
+        txt_surface = input_box_info[1]
+        txt_surface_rect = input_box_info[2]
+        pygame.draw.rect(win, c.SQUARE_COLOR, input_box, 2)
+        win.blit(txt_surface, (txt_surface_rect))
+        
+        
+        '''
+        BELOW LINE NEEDS TO BE REMOVED. ONLY FOR TESTING
+        INPUT BOX FUNCTIONALITY
+        '''
+        self.get_start_screen_input_box()
+        
+        # if len(player_names) == 1:
+        #     pygame.draw.rect(win, c.SQUARE_COLOR, input_box, 2)
+        #     win.blit(txt_surface, (txt_surface_rect))
+        #     pygame.draw.rect(win, c.SQUARE_COLOR, player_1_box, 2)
+        #     win.blit(player_1_surface, (player_1_surface_rect))
+        # elif len(player_names) == 2:
+        #     pygame.draw.rect(win, c.SQUARE_COLOR, input_box, 2)
+        #     win.blit(txt_surface, (txt_surface_rect))
+        #     pygame.draw.rect(win, c.SQUARE_COLOR, player_1_box, 2)
+        #     win.blit(player_1_surface, (player_1_surface_rect))
+
+    def get_start_screen_input_box(self):
+        start_screen_input_box = ssc.create_start_input_box(self.font)
+        self.input_box = start_screen_input_box[0]
+        self.txt_surface = start_screen_input_box[1]
+        self.txt_surface_rect = start_screen_input_box[2]
+        return
+
     def get_end_screen_buttons(self, end_screen_dict: dict) -> dict:
         play_again_button_x_min = end_screen_dict["play_again_rect"][0]
         play_again_button_x_max = end_screen_dict["play_again_rect"][0] + end_screen_dict["play_again_rect"][2]
@@ -221,18 +191,15 @@ class Draw_board():
         quit_button_x_max = end_screen_dict["quit_rect"][0] + end_screen_dict["play_again_rect"][2]
         quit_button_y_min = end_screen_dict["quit_rect"][1]
         quit_button_y_max = end_screen_dict["quit_rect"][1] + end_screen_dict["play_again_rect"][3]
-
         self.play_again_button_range_x = (play_again_button_x_min, play_again_button_x_max)
         self.play_again_button_range_y = (play_again_button_y_min, play_again_button_y_max)
         self.quit_button_range_x = (quit_button_x_min, quit_button_x_max)
         self.quit_button_range_y = (quit_button_y_min, quit_button_y_max)
-        
 
-    
     def draw_game_over(self, win: object, game: object, end_screen_image: pygame.image) -> None:
         # self.draw_board(game, win)
         
-        end_screen_dict = self.create_end_screen(game)
+        end_screen_dict = es.create_end_screen(game, self.font)
         self.get_end_screen_buttons(end_screen_dict)
         pygame.draw.rect(win, 'black', end_screen_dict["top_rect"], 0, 6, 6, 6, 6)
         win.blit(end_screen_dict["top_text_box"], end_screen_dict["top_text_rect"])

@@ -2,13 +2,13 @@ import pygame
 import game as g 
 import Classes.board as b
 import Functionality.constants as c
+import Functionality.start_screen as ssc
 import Classes.players as p
 import Classes.pieces as pi
 import Classes.castle as ca
 import create_assets as crea
 import draw as d
 import os
-import time 
 
 def create_players(player_names) -> list[p.Player]:
     all_players = []
@@ -54,16 +54,34 @@ if __name__ == "__main__":
     clock = pygame.time.Clock()
 
     def main():
+
+        # creating all game elements
+        board = b.Board()
+        all_players = create_players(["Jur", "tom"])
+        all_pieces = create_pieces()
+        castling = ca.Castling()
+
+        # setting up game class with game elements stored
+        game = g.Game(board, all_players, all_pieces, castling)
+
+        # assign pieces to players and fill board squares with pieces
+        game.set_up_game()
+        # creating draw class to display all game elements to pygame client
+        draw = d.Draw_board()
+        draw.load_piece_images(crea.PIECE_IMAGES)
+        draw.load_selected_piece_images(crea.PIECE_IMAGES)
+        draw.load_asset_images(crea.ASSET_IMGS)
+        draw.get_start_screen_input_box()
+
+
+        # running start screen
         start_game = False
-        input_box = pygame.Rect(c.INPUT_BOX)
         input_box_is_active = False
-        text_color = pygame.Color("black")
-        player_names = ["", ""]
-        font = pygame.font.Font(None, 32)
+        player_names = []
         player_name = ''
-
+        count = 0
+        
         while not start_game:
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -73,13 +91,14 @@ if __name__ == "__main__":
                         pygame.quit()
                 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if input_box.collidepoint(event.pos):
+                    if draw.input_box.collidepoint(event.pos):
                         input_box_is_active = True
                     
                 if event.type == pygame.KEYDOWN:
                     if input_box_is_active:
                         if event.key == pygame.K_RETURN:
                             player_names.insert(0, player_name)
+                            count += 1
                             player_name = ''
                             input_box_is_active = False
                         elif event.key == pygame.K_BACKSPACE:
@@ -93,57 +112,11 @@ if __name__ == "__main__":
             These surfaces are for the input of player names
             """
             WIN.fill(c.BACKGROUND_COLOR)
-            txt_surface = font.render(player_name, True, text_color)
-            txt_surface_rect = txt_surface.get_rect()
-            txt_surface_rect.center = input_box.center
-
-            """
-            These surfaces are for the entered player names
-            """
-            player_1_text = f'Player 1 Name: {player_names[0]}'
-            player_1_surface = font.render(player_1_text, True, text_color)
-            player_1_surface_rect = player_1_surface.get_rect()
-            player_1_box = pygame.Rect(c.PLAYER_NAME_BOX)
-            win_rect = WIN.get_rect()
-            player_1_surface_rect.center = player_1_box.center
-            
-            """"
-            2 functies benodigd: Create Rect en Draw Rect
-            create rect: Obv Dictionairy in Constants, laden in de draw class
-            Draw kenmerk meegeven, 1 = draw, 0 = niet draw
-            Draw Rect: Door gelade dictionairy heen lopen en alles drawen
-            """
-                     
-        
-            pygame.draw.rect(WIN, c.SQUARE_COLOR, input_box, 2)
-            pygame.draw.rect(WIN, c.SQUARE_COLOR, player_1_box, 2)
-            WIN.blit(txt_surface, (txt_surface_rect))
-            WIN.blit(player_1_surface, (player_1_surface_rect))
-
+            draw.draw_start_screen(WIN, player_name)
             pygame.display.update()
-            
-            # dat beginscherm moet een inputbalk tekenen
-            # na waarde in inputbalk succesvol (valide) sla naam op
-            # maak balk leeg voor player 2 naam
-            # sla op en start game
+            if count >= 2: 
+                start_game = True
 
-
-        # creating all game elements
-        board = b.Board()
-        all_players = create_players()
-        all_pieces = create_pieces()
-        castling = ca.Castling()
-
-        # setting up game class with game elements stored
-        game = g.Game(board, all_players, all_pieces, castling)
-
-        # assign pieces to players and fill board squares with pieces
-        game.set_up_game()
-        # creating draw class to display all game elements to pygame client
-        draw = d.Draw_board()
-        draw.load_piece_images(crea.PIECE_IMAGES)
-        draw.load_selected_piece_images(crea.PIECE_IMAGES)
-        draw.load_asset_images(crea.ASSETS)
     # running the game
 
         run = True

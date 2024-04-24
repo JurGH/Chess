@@ -16,18 +16,8 @@ COLORS = {
 DIT MOET NOG GEFIXT. HARD CODED
 !@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@
 '''
-END_SCREEN_TEXT_TOP = 200, 50, 400, 50 
-END_SCREEN_TEXT_BOTTOM = 200, 650, 400, 50
 
-INPUT_BOX = round((SCREEN_WIDTH / 2) - ((SCREEN_WIDTH * 0.8) / 2))\
-            ,round((SCREEN_HEIGHT / 2) -((SCREEN_HEIGHT * 0.2) / 2))\
-            ,SCREEN_WIDTH * 0.8\
-            ,SCREEN_HEIGHT * 0.2
-PLAYER_NAME_BOX = round((SCREEN_WIDTH / 2) - ((SCREEN_WIDTH * 0.8) / 2))\
-            ,round(SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.2)) \
-            ,SCREEN_WIDTH * 0.4\
-            ,SCREEN_HEIGHT * 0.1
-print(INPUT_BOX)
+
 PLAYER_NAMES = ["Player1", "Player2"]
 PLAYER_COLORS = ["WHITE", "BLACK"]
 WHITE = 0
