@@ -138,7 +138,7 @@ class Draw_board():
 
         if game.checkmate or game.stalemate:
             for asset in self.assets:
-                if asset["name"] == "skull" and game.checkmate: 
+                if asset["name"] == "stalemate" and game.checkmate: 
                     end_screen_image = asset["image"]
                     break
                 if asset["name"] == "stalemate" and game.stalemate:
@@ -149,11 +149,11 @@ class Draw_board():
 
             self.draw_game_over(win, game, end_screen_image)
     
-    def draw_start_screen(self, win: object, player_name: str):
-        input_box_info = ssc.create_start_input_box(self.font, player_name)
-        input_box = input_box_info[0]
-        txt_surface = input_box_info[1]
-        txt_surface_rect = input_box_info[2]
+    def draw_input_box(self, win: object, player_name: str):
+        input_box_assets = ssc.create_start_input_box(self.font, player_name)
+        input_box = input_box_assets[0]
+        txt_surface = input_box_assets[1]
+        txt_surface_rect = input_box_assets[2]
         pygame.draw.rect(win, c.SQUARE_COLOR, input_box, 2)
         win.blit(txt_surface, (txt_surface_rect))
         
@@ -165,10 +165,7 @@ class Draw_board():
         self.get_start_screen_input_box()
         
         # if len(player_names) == 1:
-        #     pygame.draw.rect(win, c.SQUARE_COLOR, input_box, 2)
-        #     win.blit(txt_surface, (txt_surface_rect))
-        #     pygame.draw.rect(win, c.SQUARE_COLOR, player_1_box, 2)
-        #     win.blit(player_1_surface, (player_1_surface_rect))
+
         # elif len(player_names) == 2:
         #     pygame.draw.rect(win, c.SQUARE_COLOR, input_box, 2)
         #     win.blit(txt_surface, (txt_surface_rect))
@@ -181,6 +178,26 @@ class Draw_board():
         self.txt_surface = start_screen_input_box[1]
         self.txt_surface_rect = start_screen_input_box[2]
         return
+
+    def draw_player_1_name(self, win, player_name):
+        player_1_box_assets = ssc.create_player_1_box(self.font, player_name)
+        player_1_box = player_1_box_assets[0]
+        player_1_surface = player_1_box_assets[1]
+        player_1_surface_rect = player_1_box_assets[2]
+        pygame.draw.rect(win, c.SQUARE_COLOR, player_1_box, 2)
+        win.blit(player_1_surface, (player_1_surface_rect))
+        pygame.draw.rect(win, c.SQUARE_COLOR, player_1_box, 2)
+        win.blit(player_1_surface, (player_1_surface_rect))
+
+    def draw_player_2_name(self, win, player_name):
+        player_2_box_assets = ssc.create_player_2_box(self.font, player_name)
+        player_2_box = player_2_box_assets[0]
+        player_2_surface = player_2_box_assets[1]
+        player_2_surface_rect = player_2_box_assets[2]
+        pygame.draw.rect(win, c.SQUARE_COLOR, player_2_box, 2)
+        win.blit(player_2_surface, (player_2_surface_rect))
+        pygame.draw.rect(win, c.SQUARE_COLOR, player_2_box, 2)
+        win.blit(player_2_surface, (player_2_surface_rect))
 
     def get_end_screen_buttons(self, end_screen_dict: dict) -> dict:
         play_again_button_x_min = end_screen_dict["play_again_rect"][0]

@@ -55,7 +55,7 @@ class Rook(Piece):
         self.color = color
         self.type = "rook"
         try:
-            if int(self.position[ca.COLUMN_IDX]) == 1:
+            if int(self.position[ca.COLUMN_IDX]) == 1: # rook on column 1 means long castle rook
                 self.castle_type = "long"
             else:
                 self.castle_type = "short"

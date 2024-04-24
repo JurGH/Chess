@@ -118,7 +118,7 @@ def get_valid_pawn_striking_directions(piece_color) -> list[tuple]:
         raise Exception(f"No movement combinations were added. length of list = {len(valid_directions)}")
     return valid_directions
 
-
+# recursive function
 def get_available_positions_in_line_movement(
         current_column: int, 
         current_row: int, 
@@ -148,8 +148,8 @@ def get_available_positions_in_line_movement(
     if to_check_column is None and to_check_row is None:
         to_check_column = current_column + to_loop_direction[ca.COLUMN_IDX]
         to_check_row = current_row + to_loop_direction[ca.ROW_IDX]
-    # any loop after the first of current direction
-    else:
+
+    else: # any loop after the first of current direction
         to_check_column = to_check_column + to_loop_direction[ca.COLUMN_IDX]
         to_check_row = to_check_row + to_loop_direction[ca.ROW_IDX]
 
@@ -166,8 +166,8 @@ def get_available_positions_in_line_movement(
                 available_positions, 
                 direction_loop_idx
                 )
-    # position is within the board grid
-    else:
+    
+    else: # position is within the board grid
         square_occupied = check_if_square_occupied(to_check_column, to_check_row, piece_color, occupied_squares)
         if len(square_occupied) == 2:
             direction_loop_idx += 1

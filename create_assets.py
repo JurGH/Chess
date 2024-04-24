@@ -30,7 +30,12 @@ INPUT_BOX = round((c.SCREEN_WIDTH / 2) - ((c.SCREEN_WIDTH * 0.8) / 2))\
             ,round((c.SCREEN_HEIGHT / 2) -((c.SCREEN_HEIGHT * 0.2) / 2))\
             ,c.SCREEN_WIDTH * 0.8\
             ,c.SCREEN_HEIGHT * 0.2
-PLAYER_NAME_BOX = round((c.SCREEN_WIDTH / 2) - ((c.SCREEN_WIDTH * 0.8) / 2))\
+PLAYER_1_NAME_BOX = round((c.SCREEN_WIDTH / 2) - ((c.SCREEN_WIDTH * 0.8) / 2))\
+            ,round(c.SCREEN_HEIGHT - (c.SCREEN_HEIGHT * 0.2)) \
+            ,c.SCREEN_WIDTH * 0.4\
+            ,c.SCREEN_HEIGHT * 0.1
+
+PLAYER_2_NAME_BOX = round((c.SCREEN_WIDTH / 2))\
             ,round(c.SCREEN_HEIGHT - (c.SCREEN_HEIGHT * 0.2)) \
             ,c.SCREEN_WIDTH * 0.4\
             ,c.SCREEN_HEIGHT * 0.1

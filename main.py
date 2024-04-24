@@ -7,8 +7,10 @@ import Classes.players as p
 import Classes.pieces as pi
 import Classes.castle as ca
 import create_assets as crea
+import create_sounds as crs
 import draw as d
-import os
+from os import path 
+from time import sleep
 
 def create_players(player_names) -> list[p.Player]:
     all_players = []
@@ -24,31 +26,8 @@ def create_pieces() -> list[pi.Piece]:
                 created_pieces.append(pi.PIECE_CREATION_DICT[name](position, color))
     return created_pieces
 
-current_directory = os.path.dirname(__file__)
-asset_files_directory = os.path.join(current_directory, "Assets")
-
 if __name__ == "__main__":
-    pygame.init()
-    pygame.mixer.init()
-
-    # need to fix that this points to a relative position instead of absolute path
-    move_piece_sound_path = os.path.join(asset_files_directory, "move_piece.mp3")
-    strike_piece_sound_path = os.path.join(asset_files_directory, "strike_piece.wav")
-    castled_sound_path = os.path.join(asset_files_directory, "castling_3.wav")
-    error_sound_path = os.path.join(asset_files_directory, "error_2.wav")
-
-    move_piece_sound = pygame.mixer.Sound(move_piece_sound_path)
-    strike_piece_sound = pygame.mixer.Sound(strike_piece_sound_path)
-    error_sound = pygame.mixer.Sound(error_sound_path)
-    error_sound.set_volume(0.2)
-    castling_sound = pygame.mixer.Sound(castled_sound_path)
-
-    sound_library = {
-         c.PIECE_MOVED: move_piece_sound
-        ,c.STRIKED: strike_piece_sound
-        ,c.CASTLED: castling_sound
-        ,c.INVALID_MOVE: error_sound}
-
+    sound_library = crs.create_sounds()
     WIN = pygame.display.set_mode((c.SCREEN_HEIGHT, c.SCREEN_WIDTH))
     pygame.display.set_caption("Chess")
     clock = pygame.time.Clock()
@@ -57,7 +36,7 @@ if __name__ == "__main__":
 
         # creating all game elements
         board = b.Board()
-        all_players = create_players(["Jur", "tom"])
+        all_players = create_players(["player1", "player2"])
         all_pieces = create_pieces()
         castling = ca.Castling()
 
@@ -71,51 +50,63 @@ if __name__ == "__main__":
         draw.load_piece_images(crea.PIECE_IMAGES)
         draw.load_selected_piece_images(crea.PIECE_IMAGES)
         draw.load_asset_images(crea.ASSET_IMGS)
-        draw.get_start_screen_input_box()
 
-
-        # running start screen
-        start_game = False
-        input_box_is_active = False
-        player_names = []
-        player_name = ''
-        count = 0
+        # draw.get_start_screen_input_box()
+        # # running start screen
+        # start_game = False
+        # input_box_is_active = False
+        # player_names = []
+        # player_name = ''
+        # player_1_name = ''
+        # player_2_name = ''
+        # entered_names = 0
         
-        while not start_game:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
+        # while not start_game:
+        #     for event in pygame.event.get():
+        #         if event.type == pygame.QUIT:
+        #             pygame.quit()
                 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_q:
-                        pygame.quit()
+        #         if event.type == pygame.KEYDOWN:
+        #             if event.key == pygame.K_q:
+        #                 pygame.quit()
                 
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if draw.input_box.collidepoint(event.pos):
-                        input_box_is_active = True
+        #         if event.type == pygame.MOUSEBUTTONDOWN:
+        #             if draw.input_box.collidepoint(event.pos):
+        #                 input_box_is_active = True
                     
-                if event.type == pygame.KEYDOWN:
-                    if input_box_is_active:
-                        if event.key == pygame.K_RETURN:
-                            player_names.insert(0, player_name)
-                            count += 1
-                            player_name = ''
-                            input_box_is_active = False
-                        elif event.key == pygame.K_BACKSPACE:
-                            player_name = player_name[:-1]
-                        else:
-                            if len(player_name) >= 10:
-                                pass
-                            else:
-                                player_name += event.unicode
-            """
-            These surfaces are for the input of player names
-            """
-            WIN.fill(c.BACKGROUND_COLOR)
-            draw.draw_start_screen(WIN, player_name)
-            pygame.display.update()
-            if count >= 2: 
-                start_game = True
+        #         if event.type == pygame.KEYDOWN:
+        #             if input_box_is_active:
+        #                 if event.key == pygame.K_RETURN:
+        #                     player_names.insert(0, player_name)
+        #                     if entered_names == 0:
+        #                         player_1_name = player_name
+        #                         entered_names += 1
+        #                         player_name = ''
+        #                         input_box_is_active = False
+        #                     else:
+        #                         player_2_name = player_name
+        #                         entered_names += 1
+        #                 elif event.key == pygame.K_BACKSPACE:
+        #                     player_name = player_name[:-1]
+        #                 else:
+        #                     if len(player_name) >= 10:
+        #                         pass
+        #                     else:
+        #                         player_name += event.unicode
+        #     """
+        #     These surfaces are for the input of player names
+        #     """
+        #     WIN.fill(c.BACKGROUND_COLOR)
+        #     draw.draw_input_box(WIN, player_name)
+        #     if len(player_names) == 1: 
+        #         draw.draw_player_1_name(WIN, player_1_name)
+        #     else:
+        #         draw.draw_player_1_name(WIN, player_1_name)
+        #         draw.draw_player_2_name(WIN, player_2_name)
+        #     pygame.display.update()
+        #     if len(player_names) >= 2:
+        #         sleep(2)
+        #         start_game = True
 
     # running the game
 

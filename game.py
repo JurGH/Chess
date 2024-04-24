@@ -271,13 +271,12 @@ class Game():
         self.assign_pieces_to_players()
         self.store_available_positions_player_pieces()
         self.edit_available_positions_player_pieces()
-        # no available positions in piece = not selectable
         self.define_selectable_player_pieces() # no available positions in piece = not selectable
-        self.eval_check()
-        self.eval_checkmate_or_stalemate()
+        self.eval_check() # find out if active player is checked
+        self.eval_checkmate_or_stalemate() # find out if active player is checkmated, or stalemate happened
         self.state_turn = c.PIECE_NOT_SELECTED
         if self.check:
-            self.active_player.set_check()
+            self.active_player.set_check() # if check in game, set player state to check. 
         return
     
     def reset_game(self) -> None:
@@ -287,7 +286,6 @@ class Game():
             player.change_color()
             if player.color == c.PLAYER_COLORS[c.WHITE]:
                 player.on_turn = True
-
         for piece in self.all_pieces:
             del piece
         self.set_up_game()
